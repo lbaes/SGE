@@ -8,7 +8,8 @@
 namespace cgfx {
 
     struct BoxColliderTransform {
-        BoxColliderTransform(const BoxCollider& b, const TransformComponent& t) : box(b), transform(t) {
+        BoxColliderTransform(const BoxCollider& b, const TransformComponent& t)
+                : box(b), transform(t) {
 
         }
 

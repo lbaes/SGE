@@ -9,18 +9,23 @@ namespace cgfx {
     }
 
     void CollisionSystem::UpdateFixed() {
-        ForEach<BoxCollider, TransformComponent>([this](Entity entity, const auto& box, const auto& transform) {
-            ForEach<BoxCollider, TransformComponent>([&](Entity entity2, const auto& box2, const auto& transform2) {
-                if (entity == entity2) {
-                    return;
-                }
-                BoxColliderTransform a(box, transform);
-                BoxColliderTransform b(box2, transform2);
+        auto first = begin();
+        auto last = end();
+        int comps = 0;
 
-                if (AABB(a, b)) {
-                    Logger::Info("BoxCollider {},{}", entity, entity2);
-                }
-            });
+        ForEach<BoxCollider, TransformComponent>(first, last,
+        [this, &first, &last, &comps](Entity entity, const auto& b, const auto& t) {
+            first++;
+            ForEach<BoxCollider, TransformComponent>(first, last,
+                [&entity, &b, &t, &comps](Entity entity2, const auto& b2, const auto& t2) {
+                    BoxColliderTransform bct(b, t);
+                    BoxColliderTransform bct2(b2, t2);
+
+                    if (AABB(bct, bct2)) {
+                        Logger::Info("Collision: {}, {}", entity, entity2);
+                    }
+                    comps++;
+                });
         });
     }
 
@@ -30,4 +35,5 @@ namespace cgfx {
                 a.transform.position.y < b.transform.position.y + b.box.height &&
                 a.transform.position.y + a.box.height > b.transform.position.y);
     }
+
 } // cgfx
