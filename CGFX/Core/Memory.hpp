@@ -1,0 +1,7 @@
+#ifndef CGFX_MEMORY_HPP
+#define CGFX_MEMORY_HPP
+
+
+
+
+#endif //CGFX_MEMORY_HPP
