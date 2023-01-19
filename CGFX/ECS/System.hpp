@@ -9,6 +9,8 @@ namespace cgfx {
     class System {
     public:
 
+        using iterator = typename std::vector<Entity>::iterator;
+
         void AddEntity(Entity entity) {
             mEntities.emplace_back(entity);
         }
@@ -57,16 +59,21 @@ namespace cgfx {
         }
 
         template<typename ...ComponentTs, typename F>
-        void ForEach(F&& f) requires std::invocable<F, ComponentTs& ...> {
-            for (auto entity: mEntities) {
-                f(mRegistry->GetComponent<ComponentTs>(entity)...);
+        void ForEach(F&& f) requires std::invocable<F, ComponentTs& ...> || std::invocable<F, Entity, ComponentTs& ...> {
+            ForEach<ComponentTs...>(mEntities.begin(), mEntities.end(), f);
+        }
+
+        template<typename ...ComponentTs, typename F>
+        void ForEach(iterator begin, iterator end, F&& f) requires std::invocable<F, ComponentTs& ...> {
+            for (auto it = begin; it != end; ++it) {
+                f(mRegistry->GetComponent<ComponentTs>(*it)...);
             }
         }
 
         template<typename ...ComponentTs, typename F>
-        void ForEach(F&& f) requires std::invocable<F, Entity, ComponentTs& ...> {
-            for (auto entity: mEntities) {
-                f(entity, mRegistry->GetComponent<ComponentTs>(entity)...);
+        void ForEach(iterator begin, iterator end, F&& f) requires std::invocable<F, Entity, ComponentTs& ...> {
+            for (auto it = begin; it != end; ++it) {
+                f(*it, mRegistry->GetComponent<ComponentTs>(*it)...);
             }
         }
 
