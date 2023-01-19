@@ -23,6 +23,14 @@ namespace cgfx {
             return mEntities;
         }
 
+        iterator begin()  {
+            return mEntities.begin();
+        }
+
+        iterator end()  {
+            return mEntities.end();
+        }
+
         size_t GetNumberOfEntitiesOnSystem() const noexcept {
             return mEntities.size();
         }
@@ -82,8 +90,6 @@ namespace cgfx {
         Signature mComponentSignature;
         std::vector<Entity> mEntities;
     };
-
-
 } // cgfx
 
 #endif //CGFX_SYSTEM_HPP
