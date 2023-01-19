@@ -14,7 +14,6 @@ public:
 private:
     void LoadMap(const std::string& file, const std::string& texFile, int tileScale);
     Entity ladybug;
-    Entity frog;
     std::vector<Entity> frogs;
 };
 
@@ -56,7 +55,6 @@ void FrogTDGame::OnGameStart() {
     // Load TileMap
     LoadMap("assets/wasteland_tilemap.layout", "wasteland_tilemap", 4);
 
-
     auto& registry = GetRegistry();
     ladybug = registry.CreateEntity();
     registry.AddComponent<SpriteComponent>(ladybug, "ladybug", Rect2D{0, 0, 32, 32}, 1);
@@ -67,7 +65,7 @@ void FrogTDGame::OnGameStart() {
     Logger::Info("[Game] ladybug created: {}", ladybug);
 
     for (int i = 0; i < 5; ++i) {
-        frog = registry.CreateEntity();
+        Entity frog = registry.CreateEntity();
         registry.AddComponent<SpriteComponent>(frog, "frog", Rect2D{0, 0, 32, 32}, 1);
         registry.AddComponent<SpriteAnimationComponent>(frog, 0, 2, 0, 4, true);
         registry.AddComponent<TransformComponent>(frog, 32 * i * 3, 0 * 3, 3, 3, 0);
@@ -79,7 +77,6 @@ void FrogTDGame::OnGameStart() {
 }
 
 void FrogTDGame::OnGameUpdate(float dt) {
-
 
 }
 
