@@ -7,7 +7,7 @@ namespace cgfx {
     }
 
     void AnimationSystem::UpdateFixed() {
-        // Logger::Info("[ANIMATION] Update Fixed");
+        // logger->Info("[ANIMATION] Update Fixed");
         ForEach<SpriteComponent, SpriteAnimationComponent>(
                 [=](auto& sprite, auto& animation) {
 
@@ -23,6 +23,6 @@ namespace cgfx {
     }
 
     void AnimationSystem::Update(float deltaTime) {
-        //Logger::Info("[ANIMATION] Update Variable: {}", deltaTime);
+        //logger->Info("[ANIMATION] Update Variable: {}", deltaTime);
     }
 } // cgfx

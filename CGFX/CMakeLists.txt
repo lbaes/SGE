@@ -28,7 +28,7 @@ add_library(CGFX STATIC
             Core/detail/MurmurHash3.cpp
             Core/StringId.hpp
             Core/StringId.cpp
-            Core/Math.hpp Core/Memory.hpp Core/Core.hpp Systems/AnimationSystem.cpp Systems/AnimationSystem.hpp ECS/Components/BoxCollider.hpp Systems/CollisionSystem.cpp Systems/CollisionSystem.hpp)
+            Core/Math.hpp Core/Memory.hpp Core/Core.hpp Systems/AnimationSystem.cpp Systems/AnimationSystem.hpp ECS/Components/BoxCollider.hpp Systems/CollisionSystem.cpp Systems/CollisionSystem.hpp Core/EnumFlag.hpp Systems/detail/BoxColliderTransform.hpp)
 
 if (WINDOWS AND (UNIX AND NOT APPLE))
     target_compile_definitions(CGFX PRIVATE CGFX_WINDOWS)

@@ -13,8 +13,7 @@ namespace cgfx {
         Texture2D(SDL_Renderer *renderer, const std::string& file) :
                 mTexture(IMG_LoadTexture(renderer, file.c_str())) {
             SDL_QueryTexture(mTexture, nullptr, nullptr, &mWidth, &mHeight);
-            if (!mTexture) {
-                Logger::Error("couldn't load {}: {}", file, SDL_GetError());
+            if (mTexture == nullptr) {
                 throw std::runtime_error("texture loading failed");
             }
         }

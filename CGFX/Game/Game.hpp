@@ -60,6 +60,7 @@ namespace cgfx {
         SDL_Renderer *mRenderer;
         Registry mRegistry;
         std::shared_ptr<AssetStore<Texture2D>> mTextureStore;
+        Logger logger{"ENGINE"};
     };
 } // cgfx
 

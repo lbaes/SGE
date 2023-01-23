@@ -14,12 +14,9 @@ namespace cgfx {
             mWindow(nullptr),
             mRenderer(nullptr),
             mTextureStore(std::make_shared<AssetStore<Texture2D>>()) {
-        Logger::Info("Game constructed!");
 
-        Logger::Info("Game initializing...");
+
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-            Logger::Error("SDL Init failed:");
-            Logger::Error(SDL_GetError());
             return;
         }
 
@@ -30,15 +27,11 @@ namespace cgfx {
                                    600, SDL_WINDOW_SHOWN);
 
         if (mWindow == nullptr) {
-            Logger::Error("SDL CreateWindow failed:");
-            Logger::Error(SDL_GetError());
             return;
         }
 
         mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC);
         if (!mRenderer) {
-            Logger::Error("SDL CreateRenderer failed: ");
-            Logger::Error(SDL_GetError());
             return;
         }
 
@@ -47,8 +40,6 @@ namespace cgfx {
 
         constexpr std::array<int, 4> bg = {120, 70, 200, 255};
         SDL_SetRenderDrawColor(mRenderer, bg[0], bg[1], bg[2], bg[3]);
-
-        Logger::Info("Game initialized.");
     }
 
     Game::~Game() {
@@ -58,7 +49,6 @@ namespace cgfx {
     }
 
     void Game::Setup() {
-        Logger::Info("WIDTH: {} ; HEIGHT {}", mWindowWidth, mWindowHeight);
         mRegistry.RegisterSystem<PhysicsSystem>();
         mRegistry.RegisterSystem<AnimationSystem>();
         mRegistry.RegisterSystem<CollisionSystem>();

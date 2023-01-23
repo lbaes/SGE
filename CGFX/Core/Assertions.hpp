@@ -11,7 +11,7 @@
 #define CGFX_ASSERT(expr) \
     if (expr) {}          \
     else {                \
-    Logger::Critical("{}, file: {}, line: {}", #expr, __FILE__, __LINE__); \
+    logger->Critical("{}, file: {}, line: {}", #expr, __FILE__, __LINE__); \
     debugBreak();\
     }
 

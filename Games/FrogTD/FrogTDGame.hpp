@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include "CGFX/CGFX.hpp"
+#include <corefoundation/CFBundle.h>
 
 using namespace cgfx;
 
@@ -25,12 +26,13 @@ void FrogTDGame::LoadMap(const std::string& file, const std::string& texFile, in
     std::string line;
     int x = 0;
     int y = 0;
-    int count = 0;
     while (std::getline(map_file, line)) {
         std::istringstream iss(line);
         std::string index_string;
+        int count = 0;
         y = 0;
         while (std::getline(iss, index_string, ',')) {
+            count++;
             int index = std::stoi(index_string);
             int index_x = index % tile_map_cols;
             int index_y = index / tile_map_cols;
@@ -45,15 +47,34 @@ void FrogTDGame::LoadMap(const std::string& file, const std::string& texFile, in
 }
 
 void FrogTDGame::OnGameStart() {
+
+    auto getResource = [](const std::string& file, const std::string& type){
+        CFStringRef cfFile = CFStringCreateWithCString(NULL, file.c_str(), CFStringBuiltInEncodings::kCFStringEncodingUTF8);
+        CFStringRef cfType = CFStringCreateWithCString(NULL, type.c_str(), CFStringBuiltInEncodings::kCFStringEncodingUTF8);
+
+        CFURLRef appUrlRef =
+        CFBundleCopyResourceURL(CFBundleGetMainBundle(), cfFile, cfType, NULL);
+
+        CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
+        std::string resourcePath(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding()));
+
+        CFRelease(appUrlRef);
+        CFRelease(macPath);
+        CFRelease(cfType);
+        CFRelease(cfFile);
+
+        return resourcePath;
+    };
+
     auto& texStore = GetTexStore();
-    texStore.Load(MakeStringId("wasteland_tilemap"), GetRenderer(), "assets/wasteland_tilemap.png");
+    texStore.Load("wasteland_tilemap"_id, GetRenderer(), getResource("wasteland_tilemap", "png"));
 
     // Load Sprites
-    texStore.Load("ladybug"_id, GetRenderer(), "assets/ladybug.png");
-    texStore.Load("frog"_id, GetRenderer(), "assets/frog.png");
+    texStore.Load("ladybug"_id, GetRenderer(), getResource("ladybug", "png"));
+    texStore.Load("frog"_id, GetRenderer(), getResource("frog", "png"));
 
     // Load TileMap
-    LoadMap("assets/wasteland_tilemap.layout", "wasteland_tilemap", 4);
+    LoadMap(getResource("wasteland_tilemap", "layout"), "wasteland_tilemap", 4);
 
     auto& registry = GetRegistry();
     ladybug = registry.CreateEntity();
@@ -62,7 +83,6 @@ void FrogTDGame::OnGameStart() {
     registry.AddComponent<TransformComponent>(ladybug, 32 * 4, 32 * 4, 2, 2);
     registry.AddComponent<RigidBodyComponent>(ladybug, 0, 1);
     registry.AddComponent<BoxCollider>(ladybug, 32*2, 32*2);
-    Logger::Info("[Game] ladybug created: {}", ladybug);
 
     for (int i = 0; i < 5; ++i) {
         Entity frog = registry.CreateEntity();
@@ -72,7 +92,6 @@ void FrogTDGame::OnGameStart() {
         registry.AddComponent<RigidBodyComponent>(frog, 1, 1);
         registry.AddComponent<BoxCollider>(frog, 32*3, 32*3);
         frogs.push_back(frog);
-        Logger::Info("[Game] frog created: {}", frog);
     }
 }
 

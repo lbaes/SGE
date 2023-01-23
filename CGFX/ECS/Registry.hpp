@@ -112,10 +112,7 @@ namespace cgfx {
         template<typename SystemT>
         SystemT& GetSystem() const {
             auto system = mSystems.at(typeid(SystemT));
-            if (system == nullptr) {
-                Logger::Error("{} was not registered before GetSystem() call", TypeName<SystemT>::Get());
-                throw SystemNotRegisteredException(TypeName<SystemT>::Get());
-            }
+			assert(system != nullptr && "system was used before being registered!");
             return *std::static_pointer_cast<SystemT>(system);
         }
 

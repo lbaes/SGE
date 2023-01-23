@@ -16,7 +16,6 @@ namespace cgfx {
     void SpriteRenderer::Update() {
         const auto currentNumEntities = GetNumberOfEntitiesOnSystem();
         if (currentNumEntities != previousEntities) {
-            Logger::Info("[RENDERER] Sorting by z_index");
             SortEntities([&](Entity a, Entity b) {
                 const auto& componentA = GetComponent<SpriteComponent>(a);
                 const auto& componentB = GetComponent<SpriteComponent>(b);
