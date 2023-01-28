@@ -79,7 +79,7 @@ void FrogTDGame::OnGameStart() {
     auto& registry = GetRegistry();
     ladybug = registry.CreateEntity();
     registry.AddComponent<SpriteComponent>(ladybug, "ladybug", Rect2D{0, 0, 32, 32}, 1);
-    registry.AddComponent<SpriteAnimationComponent>(ladybug, 0, 7, 0, 4, true);
+    registry.AddComponent<SpriteAnimationComponent>(ladybug, 0, 7, 0, 4, false);
     registry.AddComponent<TransformComponent>(ladybug, 32 * 4, 32 * 4, 2, 2);
     registry.AddComponent<RigidBodyComponent>(ladybug, 0, 1);
     registry.AddComponent<BoxCollider>(ladybug, 32*2, 32*2);

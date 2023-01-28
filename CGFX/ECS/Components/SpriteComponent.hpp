@@ -23,7 +23,8 @@ namespace cgfx {
         int last_update = 0;
         int speed = 1;
         bool loop = false;
-    };
+		int updates = 0;
+	};
 
     ENABLE_TYPENAME(SpriteComponent);
 

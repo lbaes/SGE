@@ -23,6 +23,12 @@ namespace cgfx {
     }
 
     void Registry::DeleteEntity(Entity entity) {
+
+		if (mUpdateQueue.contains(entity)){
+			mUpdateQueue.erase(entity);
+			return;
+		}
+
         if (entity <= MAX_ENTITIES && !cstd::contains(mAvailableEntities, entity)) {
             mDeletionQueue.emplace(entity);
         }

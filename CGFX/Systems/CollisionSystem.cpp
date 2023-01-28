@@ -9,13 +9,12 @@ namespace cgfx {
     void CollisionSystem::UpdateFixed() {
         auto first = begin();
         auto last = end();
-        int comps = 0;
 
         ForEach<BoxCollider, TransformComponent>(first, last,
-        [this, &first, &last, &comps](Entity entity, const auto& b, const auto& t) {
+        [this, &first, &last](Entity entity, const auto& b, const auto& t) {
             first++;
             ForEach<BoxCollider, TransformComponent>(first, last,
-                [&entity, &b, &t, &comps](Entity entity2, const auto& b2, const auto& t2) {
+                [&entity, &b, &t](Entity entity2, const auto& b2, const auto& t2) {
                     detail::BoxColliderTransform bct(b, t);
                     detail::BoxColliderTransform bct2(b2, t2);
 
@@ -23,8 +22,8 @@ namespace cgfx {
 						(void)entity;
 						(void)entity2;
 						//TODO CollisionCallback
+
                     }
-                    comps++;
                 });
         });
     }

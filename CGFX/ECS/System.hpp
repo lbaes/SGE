@@ -1,95 +1,101 @@
 #ifndef CGFX_SYSTEM_HPP
 #define CGFX_SYSTEM_HPP
 
+#include <utility>
 #include "CGFX/ECS/Registry.hpp"
 #include "CGFX/Core/AlgorithmExtension.hpp"
 
 namespace cgfx {
 
-    class System {
-    public:
+	class System {
+	public:
 
-        using iterator = typename std::vector<Entity>::iterator;
+		using iterator = typename std::vector<Entity>::iterator;
+		using const_iterator = typename std::vector<Entity>::const_iterator;
 
-        void AddEntity(Entity entity) {
-            mEntities.emplace_back(entity);
-        }
+		void AddEntity(Entity entity) {
+			mEntities.emplace_back(entity);
+		}
 
-        void RemoveEntity(Entity entity) {
-            cstd::remove(mEntities, entity);
-        }
+		void RemoveEntity(Entity entity) {
+			cstd::remove(mEntities, entity);
+		}
 
-        const std::vector<Entity>& GetEntities() const {
-            return mEntities;
-        }
+		void SetRegistry(Registry* registry) noexcept {
+			assert(registry != nullptr && "registry can't be null");
+			mRegistry = registry;
+		}
 
-        iterator begin()  {
-            return mEntities.begin();
-        }
+		iterator begin() {
+			return mEntities.begin();
+		}
 
-        iterator end()  {
-            return mEntities.end();
-        }
+		iterator end() {
+			return mEntities.end();
+		}
 
-        size_t GetNumberOfEntitiesOnSystem() const noexcept {
-            return mEntities.size();
-        }
+		const_iterator begin() const {
+			return mEntities.cbegin();
+		}
 
-        void SetRegistry(Registry *registry) noexcept {
-            assert(registry != nullptr && "registry can't be null");
-            mRegistry = registry;
-        }
+		const_iterator end() const {
+			return mEntities.cend();
+		}
 
-        template<typename ComponentT>
-        ComponentT& GetComponent(Entity entity) const {
-            return mRegistry->GetComponent<ComponentT>(entity);
-        }
+		size_t GetNumberOfEntitiesOnSystem() const noexcept {
+			return mEntities.size();
+		}
 
-        template<typename ComponentT>
-        bool HasComponent(Entity entity) {
-            return mRegistry->HasComponent<ComponentT>(entity);
-        }
+		template<typename ComponentT>
+		ComponentT& GetComponent(Entity entity) const {
+			return mRegistry->GetComponent<ComponentT>(entity);
+		}
 
-        const Signature& GetComponentSignature() const {
-            return mComponentSignature;
-        }
+		template<typename ComponentT>
+		bool HasComponent(Entity entity) {
+			return mRegistry->HasComponent<ComponentT>(entity);
+		}
 
-        template<typename F>
-        void SortEntities(F&& comp) {
-            std::sort(mEntities.begin(), mEntities.end(), comp);
-        }
+		const Signature& GetComponentSignature() const {
+			return mComponentSignature;
+		}
 
-        template<typename ...ComponentTs>
-        void Require() {
-            mComponentSignature
-                    |= (Signature().set(Component<ComponentTs>::GetId())
-                    |= ...);
-        }
+		template<typename F>
+		void SortEntities(F&& comp) {
+			std::sort(mEntities.begin(), mEntities.end(), comp);
+		}
 
-        template<typename ...ComponentTs, typename F>
-        void ForEach(F&& f) requires std::invocable<F, ComponentTs& ...> || std::invocable<F, Entity, ComponentTs& ...> {
-            ForEach<ComponentTs...>(mEntities.begin(), mEntities.end(), f);
-        }
+		template<typename ...ComponentTs>
+		void Require() {
+			mComponentSignature
+					|= (Signature().set(Component<ComponentTs>::GetId())
+					|= ...);
+		}
 
-        template<typename ...ComponentTs, typename F>
-        void ForEach(iterator begin, iterator end, F&& f) requires std::invocable<F, ComponentTs& ...> {
-            for (auto it = begin; it != end; ++it) {
-                f(mRegistry->GetComponent<ComponentTs>(*it)...);
-            }
-        }
+		template<typename ...ComponentTs, typename F>
+		void ForEach(F&& f) requires std::invocable<F, ComponentTs& ...> || std::invocable<F, Entity, ComponentTs& ...> {
+			ForEach<ComponentTs...>(mEntities.begin(), mEntities.end(), f);
+		}
 
-        template<typename ...ComponentTs, typename F>
-        void ForEach(iterator begin, iterator end, F&& f) requires std::invocable<F, Entity, ComponentTs& ...> {
-            for (auto it = begin; it != end; ++it) {
-                f(*it, mRegistry->GetComponent<ComponentTs>(*it)...);
-            }
-        }
+		template<typename ...ComponentTs, typename F>
+		void ForEach(iterator begin, iterator end, F&& f) requires std::invocable<F, ComponentTs& ...> {
+			for (auto it = begin; it != end; ++it) {
+				f(mRegistry->GetComponent<ComponentTs>(*it)...);
+			}
+		}
 
-    private:
-        Registry *mRegistry = nullptr;
-        Signature mComponentSignature;
-        std::vector<Entity> mEntities;
-    };
+		template<typename ...ComponentTs, typename F>
+		void ForEach(iterator begin, iterator end, F&& f) requires std::invocable<F, Entity, ComponentTs& ...> {
+			for (auto it = begin; it != end; ++it) {
+				f(*it, mRegistry->GetComponent<ComponentTs>(*it)...);
+			}
+		}
+
+	private:
+		Registry* mRegistry = nullptr;
+		Signature mComponentSignature;
+		std::vector<Entity> mEntities;
+	};
 } // cgfx
 
 #endif //CGFX_SYSTEM_HPP

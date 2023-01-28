@@ -104,8 +104,8 @@ namespace cgfx {
 
         template<typename SystemT, typename ...Args>
         void RegisterSystem(Args&& ...args) {
-            auto system = std::make_shared<SystemT>(std::forward<Args>(args)...);
-            system->SetRegistry(this);
+			auto system = std::make_shared<SystemT>(std::forward<Args>(args)...);
+			system->SetRegistry(this);
             mSystems.insert({typeid(SystemT), std::move(system)});
         }
 
