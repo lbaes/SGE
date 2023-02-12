@@ -1,12 +1,13 @@
 #include "CollisionSystem.hpp"
+#include "CGFX/Event/Events/CollisionEvent.hpp"
 
 namespace cgfx {
 
-    CollisionSystem::CollisionSystem() {
+    CollisionSystem::CollisionSystem(std::shared_ptr<EventBus> eventBus) : mBus(std::move(eventBus)) {
         Require<BoxCollider, TransformComponent>();
     }
 
-    void CollisionSystem::UpdateFixed() {
+	void CollisionSystem::UpdateFixed() {
         auto first = begin();
         auto last = end();
 
@@ -14,15 +15,12 @@ namespace cgfx {
         [this, &first, &last](Entity entity, const auto& b, const auto& t) {
             first++;
             ForEach<BoxCollider, TransformComponent>(first, last,
-                [&entity, &b, &t](Entity entity2, const auto& b2, const auto& t2) {
+                [&entity, &b, &t, this](Entity entity2, const auto& b2, const auto& t2) {
                     detail::BoxColliderTransform bct(b, t);
                     detail::BoxColliderTransform bct2(b2, t2);
 
                     if (AABB(bct, bct2)) {
-						(void)entity;
-						(void)entity2;
-						//TODO CollisionCallback
-
+						mBus->Dispatch(std::make_unique<CollisionEvent>(entity, entity2));
                     }
                 });
         });

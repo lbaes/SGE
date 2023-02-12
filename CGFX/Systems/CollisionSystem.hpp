@@ -10,10 +10,11 @@ namespace cgfx {
 
     class CollisionSystem : public System {
     public:
-        CollisionSystem();
+        explicit CollisionSystem(std::shared_ptr<EventBus> bus);
         void UpdateFixed();
     private:
         static bool AABB(const detail::BoxColliderTransform& a, const detail::BoxColliderTransform& b);
+		std::shared_ptr<EventBus> mBus;
     };
 
 

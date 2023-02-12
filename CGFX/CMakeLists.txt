@@ -3,32 +3,42 @@ add_library(CGFX STATIC
             Game/Game.hpp
             Game/Game.cpp
             Core/Logger.hpp
-            ECS/Registry.hpp
             Core/AlgorithmExtension.hpp
             Core/Macros.hpp
-            ECS/Exception.hpp
             Core/Reflection.hpp
-            Systems/PhysicsSystem.cpp
-            Systems/PhysicsSystem.hpp
+            Assets/Texture2D.hpp
+            Assets/AssetStore.hpp
+            ECS/ECS.hpp
+            ECS/Registry.hpp
+            ECS/Exception.hpp
             ECS/Components/TransformComponent.hpp
             ECS/Components/RigidBodyComponent.hpp
-            Assets/AssetStore.hpp
-            Systems/SpriteRenderer.cpp
-            Systems/SpriteRenderer.hpp
             ECS/Components/SpriteComponent.hpp
-            Assets/Texture2D.hpp
             ECS/Component.hpp
             ECS/Entity.hpp
             ECS/System.hpp
             ECS/Registry.cpp
-            ECS/ECS.hpp
-            Core/Assertions.hpp
+            ECS/Components/BoxCollider.hpp
             CGFX.hpp
-            Core/detail/MurmurHash3.hpp
-            Core/detail/MurmurHash3.cpp
+            Core/Core.hpp
+            Core/Assertions.hpp
             Core/StringId.hpp
             Core/StringId.cpp
-            Core/Math.hpp Core/Memory.hpp Core/Core.hpp Systems/AnimationSystem.cpp Systems/AnimationSystem.hpp ECS/Components/BoxCollider.hpp Systems/CollisionSystem.cpp Systems/CollisionSystem.hpp Core/EnumFlag.hpp Systems/detail/BoxColliderTransform.hpp)
+            Core/Math.hpp
+            Core/Memory.hpp
+            Core/detail/MurmurHash3.hpp
+            Core/detail/MurmurHash3.cpp
+            Systems/PhysicsSystem.cpp
+            Systems/PhysicsSystem.hpp
+            Systems/SpriteRenderer.cpp
+            Systems/SpriteRenderer.hpp
+            Systems/AnimationSystem.cpp
+            Systems/AnimationSystem.hpp
+            Systems/CollisionSystem.cpp
+            Systems/CollisionSystem.hpp
+            Systems/detail/BoxColliderTransform.hpp
+            Core/EnumFlag.hpp
+            Event/EventBus.hpp Event/Events/CollisionEvent.hpp)
 
 if (WINDOWS AND (UNIX AND NOT APPLE))
     target_compile_definitions(CGFX PRIVATE CGFX_WINDOWS)

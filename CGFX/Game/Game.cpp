@@ -4,6 +4,7 @@
 #include "CGFX/Systems/SpriteRenderer.hpp"
 #include "CGFX/Systems/AnimationSystem.hpp"
 #include "CGFX/Systems/CollisionSystem.hpp"
+#include "CGFX/Event/Events/CollisionEvent.hpp"
 
 namespace cgfx {
 
@@ -13,7 +14,8 @@ namespace cgfx {
             mIsRunning(false),
             mWindow(nullptr),
             mRenderer(nullptr),
-            mTextureStore(std::make_shared<AssetStore<Texture2D>>()) {
+            mTextureStore(std::make_shared<AssetStore<Texture2D>>()),
+			mEventBus(std::make_shared<EventBus>()){
 
 
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -49,9 +51,13 @@ namespace cgfx {
     }
 
     void Game::Setup() {
+		mEventBus->Subscribe<CollisionEvent>([](std::unique_ptr<CollisionEvent> event ) {
+			std::cout << "Collision " << event->a << " " << event->b << std::endl;
+		});
+
         mRegistry.RegisterSystem<PhysicsSystem>();
         mRegistry.RegisterSystem<AnimationSystem>();
-        mRegistry.RegisterSystem<CollisionSystem>();
+        mRegistry.RegisterSystem<CollisionSystem>(mEventBus);
         mRegistry.RegisterSystem<SpriteRenderer>(mRenderer, mTextureStore);
         mRegistry.Update();
     }
