@@ -15,7 +15,7 @@ namespace cgfx {
         explicit Logger(const std::string& name) {
             try {
                 mConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-                mLogger = std::make_unique<spdlog::logger>(name, mFileSink);
+				mLogger = std::make_unique<spdlog::logger>(name, mConsoleSink);
             } catch (const spdlog::spdlog_ex& ex) {
                 handle_exception(ex);
                 throw;

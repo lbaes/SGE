@@ -3,6 +3,7 @@
 
 #include "SDL.h"
 #include "CGFX/Core/Macros.hpp"
+#include "CGFX/Core/Keys.hpp"
 #include "CGFX/ECS/ECS.hpp"
 #include "CGFX/Assets/AssetStore.hpp"
 #include "CGFX/Assets/Texture2D.hpp"
@@ -62,6 +63,8 @@ namespace cgfx {
         std::shared_ptr<AssetStore<Texture2D>> mTextureStore;
 		std::shared_ptr<EventBus> mEventBus;
         Logger logger{"ENGINE"};
+
+		void DispatchEvents(SDL_KeyCode sdlKey, KeyState state);
     };
 } // cgfx
 

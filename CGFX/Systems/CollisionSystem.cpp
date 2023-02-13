@@ -20,7 +20,7 @@ namespace cgfx {
                     detail::BoxColliderTransform bct2(b2, t2);
 
                     if (AABB(bct, bct2)) {
-						mBus->Dispatch(std::make_unique<CollisionEvent>(entity, entity2));
+						mBus->Dispatch<CollisionEvent>(entity, entity2);
                     }
                 });
         });

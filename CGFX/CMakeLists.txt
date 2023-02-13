@@ -38,7 +38,7 @@ add_library(CGFX STATIC
             Systems/CollisionSystem.hpp
             Systems/detail/BoxColliderTransform.hpp
             Core/EnumFlag.hpp
-            Event/EventBus.hpp Event/Events/CollisionEvent.hpp)
+            Event/EventBus.hpp Event/Events/CollisionEvent.hpp Event/Events/InputEvents.hpp Core/Keys.hpp Systems/InputLoggerSystem.cpp Systems/InputLoggerSystem.hpp)
 
 if (WINDOWS AND (UNIX AND NOT APPLE))
     target_compile_definitions(CGFX PRIVATE CGFX_WINDOWS)
