@@ -33,6 +33,14 @@ namespace cgfx {
 				message = "Key Repeat {}, {}";
 				break;
 		}
-		mLogger->Info(message, KeyToInt(event.key), ModifierToInt(event.modifiers[0]));
+
+		int numeric_key_code = KeyToInt(event.key);
+		if (numeric_key_code > 32  && numeric_key_code < 126){
+			char ascii = static_cast<char>(numeric_key_code);
+			mLogger->Info(message, ascii, ModifierToInt(event.modifiers[0]));
+		}else {
+			mLogger->Info(message, numeric_key_code, ModifierToInt(event.modifiers[0]));
+		}
+
 	}
 } // cgfx
