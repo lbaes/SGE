@@ -2,6 +2,8 @@
 #define CGFX_COMPONENT_HPP
 
 #include <cstdint>
+#include <vector>
+#include <cassert>
 #include "CGFX/Core/Macros.hpp"
 
 namespace cgfx {

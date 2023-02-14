@@ -34,23 +34,23 @@ namespace cgfx {
         }
 
         template<typename... Ts>
-        void Info(const std::string& message, Ts&& ... args) {
-            mLogger->info(message, std::forward<Ts>(args)...);
+		void Info(const std::string& message, Ts&& ... args) {
+            mLogger->info(fmt::runtime(message), std::forward<Ts>(args)...);
         };
 
         template<typename... Ts>
         void Warn(const std::string& message, Ts&& ... args) {
-            mLogger->warn(message, std::forward<Ts>(args)...);
+            mLogger->warn(fmt::runtime(message), std::forward<Ts>(args)...);
         };
 
         template<typename... Ts>
         void Error(const std::string& message, Ts&& ... args) {
-            mLogger->error(message, std::forward<Ts>(args)...);
+            mLogger->error(fmt::runtime(message), std::forward<Ts>(args)...);
         };
 
         template<typename... Ts>
         void Critical(const std::string& message, Ts&& ... args) {
-            mLogger->critical(message, std::forward<Ts>(args)...);
+            mLogger->critical(fmt::runtime(message), std::forward<Ts>(args)...);
         };
 
     private:

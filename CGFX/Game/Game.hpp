@@ -23,7 +23,7 @@ namespace cgfx {
 
         virtual void OnGameStart() {};
 
-        virtual void OnGameUpdate(float dt) {};
+        virtual void OnGameUpdate([[maybe_unused]]float dt) {};
 
         virtual void OnGameFixedUpdate() {};
 

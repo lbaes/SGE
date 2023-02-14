@@ -3,7 +3,10 @@
 
 #include <fstream>
 #include "CGFX/CGFX.hpp"
+
+#ifdef CGFX_APPLE
 #include <corefoundation/CFBundle.h>
+#endif
 
 using namespace cgfx;
 
@@ -47,7 +50,8 @@ void FrogTDGame::LoadMap(const std::string& file, const std::string& texFile, in
 }
 
 void FrogTDGame::OnGameStart() {
-
+	// TODO Move to SGE
+#if defined(CGFX_APPLE)
     auto getResource = [](const std::string& file, const std::string& type){
         CFStringRef cfFile = CFStringCreateWithCString(NULL, file.c_str(), CFStringBuiltInEncodings::kCFStringEncodingUTF8);
         CFStringRef cfType = CFStringCreateWithCString(NULL, type.c_str(), CFStringBuiltInEncodings::kCFStringEncodingUTF8);
@@ -65,6 +69,11 @@ void FrogTDGame::OnGameStart() {
 
         return resourcePath;
     };
+#elif defined(CGFX_WINDOWS)
+	auto getResource = [](const std::string& file, const std::string& type){
+        return "./assets/" + file + "." + type;
+    };
+#endif
 
     auto& texStore = GetTexStore();
     texStore.Load("wasteland_tilemap"_id, GetRenderer(), getResource("wasteland_tilemap", "png"));
@@ -79,7 +88,7 @@ void FrogTDGame::OnGameStart() {
     auto& registry = GetRegistry();
     ladybug = registry.CreateEntity();
     registry.AddComponent<SpriteComponent>(ladybug, "ladybug", Rect2D{0, 0, 32, 32}, 1);
-    registry.AddComponent<SpriteAnimationComponent>(ladybug, 0, 7, 0, 4, false);
+    registry.AddComponent<SpriteAnimationComponent>(ladybug, 0, 7, 0u, 4, false);
     registry.AddComponent<TransformComponent>(ladybug, 32 * 4, 32 * 4, 2, 2);
     registry.AddComponent<RigidBodyComponent>(ladybug, 0, 1);
     registry.AddComponent<BoxCollider>(ladybug, 32*2, 32*2);
@@ -87,7 +96,7 @@ void FrogTDGame::OnGameStart() {
     for (int i = 0; i < 5; ++i) {
         Entity frog = registry.CreateEntity();
         registry.AddComponent<SpriteComponent>(frog, "frog", Rect2D{0, 0, 32, 32}, 1);
-        registry.AddComponent<SpriteAnimationComponent>(frog, 0, 2, 0, 4, true);
+        registry.AddComponent<SpriteAnimationComponent>(frog, 0, 2, 0u, 4, true);
         registry.AddComponent<TransformComponent>(frog, 32 * i * 3, 0 * 3, 3, 3, 0);
         registry.AddComponent<RigidBodyComponent>(frog, 1, 1);
         registry.AddComponent<BoxCollider>(frog, 32*3, 32*3);

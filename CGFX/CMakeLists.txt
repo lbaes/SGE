@@ -40,17 +40,17 @@ add_library(CGFX STATIC
             Core/EnumFlag.hpp
             Event/EventBus.hpp Event/Events/CollisionEvent.hpp Event/Events/InputEvents.hpp Core/Keys.hpp Systems/InputLoggerSystem.cpp Systems/InputLoggerSystem.hpp)
 
-if (WINDOWS AND (UNIX AND NOT APPLE))
-    target_compile_definitions(CGFX PRIVATE CGFX_WINDOWS)
-    target_compile_definitions(CGFX PRIVATE CGFX_OPENGL)
-    target_compile_definitions(CGFX PRIVATE CGFX_DIRECTX)
+if (WIN32)
+    target_compile_definitions(CGFX PUBLIC CGFX_WINDOWS)
+    target_compile_definitions(CGFX PUBLIC CGFX_OPENGL)
+    target_compile_definitions(CGFX PUBLIC CGFX_DIRECTX)
 elseif (APPLE)
-    target_compile_definitions(CGFX PRIVATE CGFX_APPLE)
-    target_compile_definitions(CGFX PRIVATE CGFX_OPENGL)
-    target_compile_definitions(CGFX PRIVATE CGFX_METAL)
+    target_compile_definitions(CGFX PUBLIC CGFX_APPLE)
+    target_compile_definitions(CGFX PUBLIC CGFX_OPENGL)
+    target_compile_definitions(CGFX PUBLIC CGFX_METAL)
 elseif (UNIX)
-    target_compile_definitions(CGFX PRIVATE CGFX_UNIX)
-    target_compile_definitions(CGFX PRIVATE CGFX_OPENGL)
+    target_compile_definitions(CGFX PUBLIC CGFX_UNIX)
+    target_compile_definitions(CGFX PUBLIC CGFX_OPENGL)
 endif ()
 
 target_compile_definitions(CGFX PUBLIC
@@ -59,6 +59,7 @@ target_compile_definitions(CGFX PUBLIC
                            $<$<CONFIG:RelWithDebInfo>:CGFX_DEBUG>
                            $<$<CONFIG:Release>:CGFX_RELEASE>
                            $<$<CONFIG:MinSizeRel>:CGFX_RELEASE>
+                           SDL_MAIN_HANDLED
                            )
 target_compile_options(CGFX PUBLIC $<$<CXX_COMPILER_ID:MSVC>: /EHsc>)
 target_compile_options(CGFX PRIVATE $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>: -Wall> $<$<CXX_COMPILER_ID:MSVC>: /EHsc /W4>)

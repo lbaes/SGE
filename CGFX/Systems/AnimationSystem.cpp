@@ -14,7 +14,7 @@ namespace cgfx {
 						return;
 
                     float dt = (SDL_GetTicks64() - animation.last_update) / 1000.0f;
-                    int framesToUpdate = floor(dt / (1.0f / animation.speed));
+                    int framesToUpdate = static_cast<int>(floor(dt / (1.0f / animation.speed)));
                     if (framesToUpdate > 0) {
                         animation.current_frame += framesToUpdate;
                         animation.current_frame %= animation.max_frames;

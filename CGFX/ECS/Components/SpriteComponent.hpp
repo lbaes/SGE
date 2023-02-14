@@ -20,7 +20,7 @@ namespace cgfx {
     struct SpriteAnimationComponent {
         int current_frame = 0;
         int max_frames = 1;
-        int last_update = 0;
+        uint64_t last_update = 0;
         int speed = 1;
         bool loop = false;
 		int updates = 0;

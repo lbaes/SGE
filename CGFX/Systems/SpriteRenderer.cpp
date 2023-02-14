@@ -49,8 +49,8 @@ namespace cgfx {
             if (HasComponent<BoxCollider>(entity)) {
                 auto& box = GetComponent<BoxCollider>(entity);
                 SDL_Rect debugRect;
-                debugRect.x = transform.position.x;
-                debugRect.y = transform.position.y;
+                debugRect.x = static_cast<int>(transform.position.x);
+                debugRect.y = static_cast<int>(transform.position.y);
                 debugRect.w = box.width;
                 debugRect.h = box.height;
                 SDL_RenderDrawRect(mRenderer, &debugRect);

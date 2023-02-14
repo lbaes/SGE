@@ -43,7 +43,7 @@ namespace cgfx {
 		SDL_GetRendererOutputSize(mRenderer, &mWindowWidth, &mWindowHeight);
 		SDL_RenderSetLogicalSize(mRenderer, mWindowWidth, mWindowHeight);
 
-		constexpr std::array<int, 4> bg = {120, 70, 200, 255};
+		constexpr std::array<uint8_t , 4> bg = {120, 70, 200, 255};
 		SDL_SetRenderDrawColor(mRenderer, bg[0], bg[1], bg[2], bg[3]);
 	}
 

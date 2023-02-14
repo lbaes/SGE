@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <functional>
 #include <vector>
+#include <memory>
 #include "CGFX/Core/Macros.hpp"
 
 namespace cgfx {
