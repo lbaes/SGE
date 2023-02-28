@@ -2,6 +2,7 @@
 #define CGFX_SYSTEM_HPP
 
 #include <utility>
+#include <set>
 #include "CGFX/Event/EventBus.hpp"
 #include "CGFX/ECS/Registry.hpp"
 #include "CGFX/Core/AlgorithmExtension.hpp"
@@ -11,15 +12,15 @@ namespace cgfx {
 	class System {
 	public:
 
-		using iterator = typename std::vector<Entity>::iterator;
-		using const_iterator = typename std::vector<Entity>::const_iterator;
+		using iterator = typename std::set<Entity>::iterator;
+		using const_iterator = typename std::set<Entity>::const_iterator;
 
 		void AddEntity(Entity entity) {
-			mEntities.emplace_back(entity);
+			mEntities.insert(entity);
 		}
 
 		void RemoveEntity(Entity entity) {
-			cstd::remove(mEntities, entity);
+			mEntities.erase(entity);
 		}
 
 		void SetRegistry(Registry* registry) noexcept {
@@ -61,11 +62,6 @@ namespace cgfx {
 			return mComponentSignature;
 		}
 
-		template<typename F>
-		void SortEntities(F&& comp) {
-			std::sort(mEntities.begin(), mEntities.end(), comp);
-		}
-
 		template<typename ...ComponentTs>
 		void Require() {
 			mComponentSignature
@@ -95,7 +91,7 @@ namespace cgfx {
 	private:
 		Registry* mRegistry = nullptr;
 		Signature mComponentSignature;
-		std::vector<Entity> mEntities;
+		std::set<Entity> mEntities;
 	};
 } // cgfx
 

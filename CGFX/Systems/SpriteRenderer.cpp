@@ -2,6 +2,7 @@
 #include "CGFX/ECS/Components/SpriteComponent.hpp"
 #include "CGFX/ECS/Components/TransformComponent.hpp"
 #include "CGFX/ECS/Components/BoxCollider.hpp"
+#include "CGFX/ECS/Components/DebugComponent.hpp"
 
 #include <utility>
 
@@ -14,16 +15,6 @@ namespace cgfx {
     }
 
     void SpriteRenderer::Update() {
-        const auto currentNumEntities = GetNumberOfEntitiesOnSystem();
-        if (currentNumEntities != previousEntities) {
-            SortEntities([&](Entity a, Entity b) {
-                const auto& componentA = GetComponent<SpriteComponent>(a);
-                const auto& componentB = GetComponent<SpriteComponent>(b);
-                return componentA.z_index < componentB.z_index;
-            });
-            previousEntities = currentNumEntities;
-        }
-
         ForEach<SpriteComponent, TransformComponent>
                 ([=](auto& sprite, const auto& transform) {
 
@@ -46,7 +37,7 @@ namespace cgfx {
                 });
 
         ForEach<TransformComponent>([=](auto entity, const auto& transform) {
-            if (HasComponent<BoxCollider>(entity)) {
+            if (HasComponent<BoxCollider>(entity) && HasComponent<DebugComponent>(entity)) {
                 auto& box = GetComponent<BoxCollider>(entity);
                 SDL_Rect debugRect;
                 debugRect.x = static_cast<int>(transform.position.x);

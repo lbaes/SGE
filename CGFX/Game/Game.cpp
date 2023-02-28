@@ -8,6 +8,7 @@
 #include "CGFX/Event/Events/CollisionEvent.hpp"
 #include "CGFX/Event/Events/InputEvents.hpp"
 #include "CGFX/Systems/InputLoggerSystem.hpp"
+#include "CGFX/Systems/KeyboardControlSystem.hpp"
 
 namespace cgfx {
 
@@ -60,6 +61,7 @@ namespace cgfx {
 
 		mRegistry.RegisterSystem<PhysicsSystem>();
 		mRegistry.RegisterSystem<AnimationSystem>();
+		mRegistry.RegisterSystem<KeyboardControlSystem>(mEventBus);
 		mRegistry.RegisterSystem<InputLoggerSystem>(mEventBus, std::make_shared<Logger>("Key Logger"));
 		mRegistry.RegisterSystem<CollisionSystem>(mEventBus);
 		mRegistry.RegisterSystem<SpriteRenderer>(mRenderer, mTextureStore);
@@ -140,12 +142,10 @@ namespace cgfx {
 			UpdateRegistry();
 
 			Update(static_cast<float>(elapsed));
-			OnGameUpdate(static_cast<float>(elapsed));
 
 			auto updates = 1;
 			while (lag >= MS_PER_UPDATE) {
 				UpdateFixed();
-				OnGameFixedUpdate();
 				lag -= MS_PER_UPDATE;
 				if (updates++ >= MAX_FRAME_SKIP) {
 					break;

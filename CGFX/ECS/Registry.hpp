@@ -85,6 +85,7 @@ namespace cgfx {
         void RemoveComponent(Entity entity) {
             auto componentId = Component<ComponentT>::GetId();
             mEntityComponentSignatures.at(entity).set(componentId, false);
+			mUpdateQueue.emplace(entity);
         }
 
         template<typename T>

@@ -16,8 +16,7 @@ namespace cgfx {
     private:
         SDL_Renderer *mRenderer;
         std::shared_ptr<AssetStore<Texture2D>> mTextureStore;
-        size_t previousEntities = 0;
-    };
+	};
 
     ENABLE_TYPENAME(SpriteRenderer);
 } // cgfx

@@ -9,6 +9,9 @@ namespace cgfx {
     void PhysicsSystem::UpdateFixed() {
         ForEach<TransformComponent, RigidBodyComponent>(
                 [](auto& transform, auto& rigid) {
+					if (rigid.velocity.x >= 3){
+
+					}
                     transform.position += rigid.velocity;
                 });
     }

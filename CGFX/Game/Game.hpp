@@ -39,6 +39,10 @@ namespace cgfx {
             return mRegistry;
         }
 
+		EventBus& GetBus() const {
+			return *mEventBus;
+		}
+
         AssetStore<Texture2D>& GetTexStore() const {
             return *mTextureStore;
         }
