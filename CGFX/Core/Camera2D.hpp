@@ -6,6 +6,9 @@
 namespace cgfx {
 
 	struct Camera2D : public Rect2D {
+		Camera2D() : Rect2D(){
+
+		}
 	};
 
 } // cgfx

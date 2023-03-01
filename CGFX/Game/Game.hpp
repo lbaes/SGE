@@ -73,7 +73,7 @@ namespace cgfx {
         std::shared_ptr<AssetStore<Texture2D>> mTextureStore;
 		std::shared_ptr<EventBus> mEventBus;
         Logger logger{"ENGINE"};
-		Camera2D camera;
+		Camera2D camera{};
 
 		void DispatchEvents(SDL_KeyCode sdlKey, KeyState state);
     };

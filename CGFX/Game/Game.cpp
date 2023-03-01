@@ -115,9 +115,9 @@ namespace cgfx {
 
 	void Game::UpdateFixed() {
 		mRegistry.GetSystem<PhysicsSystem>().UpdateFixed();
+		mRegistry.GetSystem<CameraSystem>().UpdateFixed();
 		mRegistry.GetSystem<AnimationSystem>().UpdateFixed();
 		mRegistry.GetSystem<CollisionSystem>().UpdateFixed();
-		mRegistry.GetSystem<CameraSystem>().UpdateFixed();
 		OnGameFixedUpdate();
 	}
 
@@ -756,7 +756,7 @@ namespace cgfx {
 		return resourcePath;
 	};
 #elif defined(CGFX_WINDOWS)
-	std::string GetResource(const std::string& file, const std::string& type) {
+	std::string Game::GetResource(const std::string& file, const std::string& type) {
 		return "./assets/" + file + "." + type;
 	};
 #endif
