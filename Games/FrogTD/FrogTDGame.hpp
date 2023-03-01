@@ -6,10 +6,8 @@
 #include "CGFX/Event/Events/InputEvents.hpp"
 #include "CGFX/ECS/Components/KeyboardControllable.hpp"
 #include "CGFX/ECS/Components/DebugComponent.hpp"
-
-#ifdef CGFX_APPLE
-#include <corefoundation/CFBundle.h>
-#endif
+#include "CGFX/ECS/Components/CameraTracker.hpp"
+#include "CGFX/Systems/CameraSystem.hpp"
 
 using namespace cgfx;
 
@@ -18,112 +16,78 @@ public:
 	void OnGameStart() override;
 	void OnGameUpdate(float dt) override;
 	void OnGameFixedUpdate() override;
+	void LoadTileMapIntoRegistry(const std::string& layoutFile, const std::string& texFile, int tileSize, int tileMapsCols, int tileScale);
 private:
-	void LoadMap(const std::string& file, const std::string& texFile, int tileScale);
 	Entity ladybug;
 	std::vector<Entity> frogs;
+	uint32_t mapHeight = 0;
+	uint32_t mapWidth = 0;
 };
 
-void FrogTDGame::LoadMap(const std::string& file, const std::string& texFile, int tileScale) {
-	const int tile_size = 32;
-	const int tile_map_cols = 3;
-	const int tile_scale = tileScale;
-	std::ifstream map_file(file);
-	std::string line;
-	int x = 0;
-	int y = 0;
-	while (std::getline(map_file, line)) {
-		std::istringstream iss(line);
-		std::string index_string;
-		int count = 0;
-		y = 0;
-		while (std::getline(iss, index_string, ',')) {
-			count++;
-			int index = std::stoi(index_string);
-			int index_x = index % tile_map_cols;
-			int index_y = index / tile_map_cols;
-			auto map_tile = GetRegistry().CreateEntity();
-			GetRegistry().AddComponent<SpriteComponent>(map_tile, texFile,
-														Rect2D(index_x, index_y, 32, 32), 0);
-			GetRegistry().AddComponent<TransformComponent>(map_tile, y, x, tile_scale, tile_scale);
-			y += tile_size * tile_scale;
-		}
-		x += tile_size * tile_scale;
-	}
-}
-
 void FrogTDGame::OnGameStart() {
-	// TODO Move to SGE
-#if defined(CGFX_APPLE)
-	auto getResource = [](const std::string& file, const std::string& type) {
-	  CFStringRef cfFile = CFStringCreateWithCString(NULL, file.c_str(),
-													 CFStringBuiltInEncodings::kCFStringEncodingUTF8);
-	  CFStringRef cfType = CFStringCreateWithCString(NULL, type.c_str(),
-													 CFStringBuiltInEncodings::kCFStringEncodingUTF8);
-
-	  CFURLRef appUrlRef =
-			  CFBundleCopyResourceURL(CFBundleGetMainBundle(), cfFile, cfType, NULL);
-
-	  CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
-	  std::string resourcePath(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding()));
-
-	  CFRelease(appUrlRef);
-	  CFRelease(macPath);
-	  CFRelease(cfType);
-	  CFRelease(cfFile);
-
-	  return resourcePath;
-	};
-#elif defined(CGFX_WINDOWS)
-	auto getResource = [](const std::string& file, const std::string& type){
-		return "./assets/" + file + "." + type;
-	};
-#endif
 
 	auto& texStore = GetTexStore();
-	texStore.Load("wasteland_tilemap"_id, GetRenderer(), getResource("wasteland_tilemap", "png"));
+	texStore.Load("wasteland_tilemap"_id, GetRenderer(), GetResource("wasteland_tilemap", "png"));
 
 	// Load Sprites
-	texStore.Load("ladybug"_id, GetRenderer(), getResource("ladybug", "png"));
-	texStore.Load("frog"_id, GetRenderer(), getResource("frog", "png"));
+	texStore.Load("ladybug"_id, GetRenderer(), GetResource("ladybug", "png"));
+	texStore.Load("frog"_id, GetRenderer(), GetResource("frog", "png"));
 
 	// Load TileMap
-	LoadMap(getResource("wasteland_tilemap", "layout"), "wasteland_tilemap", 4);
+	LoadTileMapIntoRegistry(GetResource("wasteland_tilemap", "layout"), "wasteland_tilemap", 32, 3, 4);
 
 	auto& registry = GetRegistry();
+
 	ladybug = registry.CreateEntity();
 	registry.AddComponent<SpriteComponent>(ladybug, "ladybug", Rect2D{0, 0, 32, 32}, 1);
 	registry.AddComponent<SpriteAnimationComponent>(ladybug, 0, 7, 0u, 4, true);
 	registry.AddComponent<TransformComponent>(ladybug, 32 * 4, 32 * 4, 2, 2);
 	registry.AddComponent<RigidBodyComponent>(ladybug, 0, 0);
-	registry.AddComponent<BoxCollider>(ladybug, 32 * 2, 32 * 2);
+	registry.AddComponent<BoxCollider>(ladybug, 32*2, 32*2);
 	registry.AddComponent<KeyboardControllable>(ladybug, vec2{0, 20}, vec2{20, 0}, vec2{0, 20}, vec2{20, 0});
+    registry.AddComponent<CameraTracker>(ladybug);
 
 	for (int i = 0; i < 5; ++i) {
 		Entity frog = registry.CreateEntity();
 		registry.AddComponent<SpriteComponent>(frog, "frog", Rect2D{0, 0, 32, 32}, 1);
 		registry.AddComponent<SpriteAnimationComponent>(frog, 0, 2, 0u, 4, true);
-		registry.AddComponent<TransformComponent>(frog, 32 * i * 3, 0 * 3, 3, 3, 0);
+		registry.AddComponent<TransformComponent>(frog, 32 * i * 3, 0 * 3, 4, 4, 0);
 		registry.AddComponent<RigidBodyComponent>(frog, 1, 1);
-		registry.AddComponent<BoxCollider>(frog, 32 * 3, 32 * 3);
+		registry.AddComponent<BoxCollider>(frog, 32*4, 32*4);
 		frogs.push_back(frog);
 	}
 
 	GetBus().Subscribe<KeyEvent>([&](KeyEvent& event){
-		if(event.state == KeyState::PRESSED && event.key == Key::P){
-			for (auto& frog: frogs) {
-				if (!registry.HasComponent<DebugComponent>(frog)){
-					registry.AddComponent<DebugComponent>(frog);
+		if(event.state == KeyState::PRESSED ){
+			if (event.key == Key::P) {
+				for (auto& frog: frogs) {
+					if (!registry.HasComponent<DebugComponent>(frog)) {
+						registry.AddComponent<DebugComponent>(frog);
+					} else {
+						registry.RemoveComponent<DebugComponent>(frog);
+					}
+				}
+				if (!registry.HasComponent<DebugComponent>(ladybug)) {
+					registry.AddComponent<DebugComponent>(ladybug);
 				} else {
-					registry.RemoveComponent<DebugComponent>(frog);
+					registry.RemoveComponent<DebugComponent>(ladybug);
+				}
+				registry.Update();
+			}
+			else if (event.key == Key::TAB){
+				auto frog = frogs[frogs.size()/2];
+				if (!registry.HasComponent<CameraTracker>(frog)){
+					registry.AddComponent<CameraTracker>(frog);
+					registry.AddComponent<KeyboardControllable>(frog, vec2{0, 20}, vec2{20, 0}, vec2{0, 20}, vec2{20, 0});
+					registry.RemoveComponent<CameraTracker>(ladybug);
+					registry.RemoveComponent<KeyboardControllable>(ladybug);
+				}else{
+					registry.AddComponent<CameraTracker>(ladybug);
+					registry.AddComponent<KeyboardControllable>(ladybug, vec2{0, 20}, vec2{20, 0}, vec2{0, 20}, vec2{20, 0});
+					registry.RemoveComponent<CameraTracker>(frog);
+					registry.RemoveComponent<KeyboardControllable>(frog);
 				}
 			}
-			if (!registry.HasComponent<DebugComponent>(ladybug)) {
-				registry.AddComponent<DebugComponent>(ladybug);
-			} else {
-				registry.RemoveComponent<DebugComponent>(ladybug);
-			}
-			registry.Update();
 		}
 	});
 }
@@ -135,8 +99,8 @@ void FrogTDGame::OnGameUpdate(float dt) {
 void FrogTDGame::OnGameFixedUpdate() {
 
 	auto bounce_on_edges = [&](RigidBodyComponent& rb, TransformComponent& tr) {
-	  auto offset_bounce_x = static_cast<float>(GetWidth())  - 32 * tr.scale.x;
-	  auto offset_bounce_y = static_cast<float>(GetHeight()) - 32 * tr.scale.y;
+	  auto offset_bounce_x = static_cast<float>(mapWidth)  - 32 * tr.scale.x;
+	  auto offset_bounce_y = static_cast<float>(mapHeight) - 32 * tr.scale.y;
 
 	  if (tr.position.x > offset_bounce_x) {
 		  tr.position.x -= tr.position.x - offset_bounce_x;
@@ -165,6 +129,42 @@ void FrogTDGame::OnGameFixedUpdate() {
 		bounce_on_edges(rigid, transform);
 	}
 
+}
+
+void FrogTDGame::LoadTileMapIntoRegistry
+(const std::string& layoutFile, const std::string& texFile, int tileSize, int tileMapsCols, int tileScale) {
+	auto& registry = GetRegistry();
+	const int tile_size = tileSize;
+	const int tile_map_cols = tileMapsCols;
+	const int tile_scale = tileScale;
+	std::ifstream map_file(layoutFile);
+	std::string line;
+	int x = 0;
+	int y = 0;
+	int line_count = 0;
+	int row_count = 0;
+	while (std::getline(map_file, line)) {
+		std::istringstream iss(line);
+		std::string index_string;
+		y = 0;
+		row_count = 0;
+		while (std::getline(iss, index_string, ',')) {
+			row_count++;
+			int index = std::stoi(index_string);
+			int index_x = index % tile_map_cols;
+			int index_y = index / tile_map_cols;
+			auto map_tile = registry.CreateEntity();
+			registry.AddComponent<SpriteComponent>(map_tile, texFile, Rect2D(index_x, index_y, 32, 32), 0);
+			registry.AddComponent<TransformComponent>(map_tile, y, x, tile_scale, tile_scale);
+			y += tile_size * tile_scale;
+		}
+		x += tile_size * tile_scale;
+		line_count++;
+	}
+	mapHeight = tile_size * tile_scale * line_count;
+	mapWidth = tile_size * tile_scale * row_count;
+	Rect2D map = Rect2D(GetWidth(), GetHeight(), mapWidth, mapHeight);
+	registry.GetSystem<CameraSystem>().SetMapBoundaries(map);
 }
 
 #endif //CGFX_FROGTDGAME_HPP

@@ -14,7 +14,7 @@ namespace cgfx {
                 mTexture(IMG_LoadTexture(renderer, file.c_str())) {
             SDL_QueryTexture(mTexture, nullptr, nullptr, &mWidth, &mHeight);
             if (mTexture == nullptr) {
-                throw std::runtime_error("texture loading failed");
+                throw std::runtime_error(std::string("texture loading failed:") + SDL_GetError());
             }
         }
 

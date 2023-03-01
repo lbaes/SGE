@@ -1,4 +1,12 @@
 #include <array>
+#include <fstream>
+
+#ifdef CGFX_APPLE
+
+#include <corefoundation/CFBundle.h>
+
+#endif
+
 #include "Game.hpp"
 #include "CGFX/Core/Keys.hpp"
 #include "CGFX/Systems/PhysicsSystem.hpp"
@@ -9,6 +17,7 @@
 #include "CGFX/Event/Events/InputEvents.hpp"
 #include "CGFX/Systems/InputLoggerSystem.hpp"
 #include "CGFX/Systems/KeyboardControlSystem.hpp"
+#include "CGFX/Systems/CameraSystem.hpp"
 
 namespace cgfx {
 
@@ -19,7 +28,7 @@ namespace cgfx {
 			mWindow(nullptr),
 			mRenderer(nullptr),
 			mTextureStore(std::make_shared<AssetStore<Texture2D>>()),
-			mEventBus(std::make_shared<EventBus>()) {
+			mEventBus(std::make_shared<EventBus>()), camera() {
 
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -44,7 +53,13 @@ namespace cgfx {
 		SDL_GetRendererOutputSize(mRenderer, &mWindowWidth, &mWindowHeight);
 		SDL_RenderSetLogicalSize(mRenderer, mWindowWidth, mWindowHeight);
 
-		constexpr std::array<uint8_t , 4> bg = {120, 70, 200, 255};
+		logger.Info("Renderer Width and Height: {},{}", mWindowWidth, mWindowHeight);
+		camera.position_x = 0;
+		camera.position_y = 0;
+		camera.width = mWindowWidth;
+		camera.height = mWindowHeight;
+
+		constexpr std::array<uint8_t, 4> bg = {120, 70, 200, 255};
 		SDL_SetRenderDrawColor(mRenderer, bg[0], bg[1], bg[2], bg[3]);
 	}
 
@@ -55,16 +70,13 @@ namespace cgfx {
 	}
 
 	void Game::Setup() {
-		mEventBus->Subscribe<CollisionEvent>([](CollisionEvent& event) {
-		  //std::cout << "Collision " << event->a << " " << event->b << std::endl;
-		});
-
 		mRegistry.RegisterSystem<PhysicsSystem>();
 		mRegistry.RegisterSystem<AnimationSystem>();
+		mRegistry.RegisterSystem<CameraSystem>(camera, Rect2D(0, 0, mWindowWidth, mWindowHeight));
 		mRegistry.RegisterSystem<KeyboardControlSystem>(mEventBus);
 		mRegistry.RegisterSystem<InputLoggerSystem>(mEventBus, std::make_shared<Logger>("Key Logger"));
 		mRegistry.RegisterSystem<CollisionSystem>(mEventBus);
-		mRegistry.RegisterSystem<SpriteRenderer>(mRenderer, mTextureStore);
+		mRegistry.RegisterSystem<SpriteRenderer>(mRenderer, camera, mTextureStore);
 		mRegistry.Update();
 	}
 
@@ -105,6 +117,7 @@ namespace cgfx {
 		mRegistry.GetSystem<PhysicsSystem>().UpdateFixed();
 		mRegistry.GetSystem<AnimationSystem>().UpdateFixed();
 		mRegistry.GetSystem<CollisionSystem>().UpdateFixed();
+		mRegistry.GetSystem<CameraSystem>().UpdateFixed();
 		OnGameFixedUpdate();
 	}
 
@@ -718,5 +731,34 @@ namespace cgfx {
 		}
 		mEventBus->Dispatch<KeyEvent>(key, keyState);
 	}
+
+#if defined(CGFX_APPLE)
+
+	std::string Game::GetResource(const std::string& file, const std::string& type) {
+		auto cfFile =
+				CFStringCreateWithCString(nullptr, file.c_str(),
+										  CFStringBuiltInEncodings::kCFStringEncodingUTF8);
+		auto cfType =
+				CFStringCreateWithCString(nullptr, type.c_str(),
+										  CFStringBuiltInEncodings::kCFStringEncodingUTF8);
+		auto appUrlRef =
+				CFBundleCopyResourceURL(CFBundleGetMainBundle(), cfFile, cfType, NULL);
+
+		auto macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
+		auto resourcePathPtr(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding()));
+		std::string resourcePath(resourcePathPtr);
+
+		CFRelease(appUrlRef);
+		CFRelease(macPath);
+		CFRelease(cfType);
+		CFRelease(cfFile);
+
+		return resourcePath;
+	};
+#elif defined(CGFX_WINDOWS)
+	std::string GetResource(const std::string& file, const std::string& type) {
+		return "./assets/" + file + "." + type;
+	};
+#endif
 
 } // cgfx

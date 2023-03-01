@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "CGFX/Core/Macros.hpp"
 #include "CGFX/Core/Keys.hpp"
+#include "CGFX/Core/Camera2D.hpp"
 #include "CGFX/ECS/ECS.hpp"
 #include "CGFX/Assets/AssetStore.hpp"
 #include "CGFX/Assets/Texture2D.hpp"
@@ -51,6 +52,11 @@ namespace cgfx {
             return mRenderer;
         }
 
+	protected:
+		static std::string GetResource(const std::string& filename, const std::string& type);
+
+		Logger gameLogger{"GAME"};
+
     private:
         void Setup();
         void ProcessInput();
@@ -67,6 +73,7 @@ namespace cgfx {
         std::shared_ptr<AssetStore<Texture2D>> mTextureStore;
 		std::shared_ptr<EventBus> mEventBus;
         Logger logger{"ENGINE"};
+		Camera2D camera;
 
 		void DispatchEvents(SDL_KeyCode sdlKey, KeyState state);
     };

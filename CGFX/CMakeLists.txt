@@ -38,7 +38,7 @@ add_library(CGFX STATIC
             Systems/CollisionSystem.hpp
             Systems/detail/BoxColliderTransform.hpp
             Core/EnumFlag.hpp
-            Event/EventBus.hpp Event/Events/CollisionEvent.hpp Event/Events/InputEvents.hpp Core/Keys.hpp Systems/InputLoggerSystem.cpp Systems/InputLoggerSystem.hpp Systems/CameraSystem.cpp Systems/CameraSystem.hpp ECS/Components/CameraTracker.hpp ECS/Components/KeyboardControllable.hpp Systems/KeyboardControlSystem.cpp Systems/KeyboardControlSystem.hpp ECS/Components/DebugComponent.hpp)
+            Event/EventBus.hpp Event/Events/CollisionEvent.hpp Event/Events/InputEvents.hpp Core/Keys.hpp Systems/InputLoggerSystem.cpp Systems/InputLoggerSystem.hpp Systems/CameraSystem.cpp Systems/CameraSystem.hpp ECS/Components/CameraTracker.hpp ECS/Components/KeyboardControllable.hpp Systems/KeyboardControlSystem.cpp Systems/KeyboardControlSystem.hpp ECS/Components/DebugComponent.hpp Core/Camera2D.hpp)
 
 if (WIN32)
     target_compile_definitions(CGFX PUBLIC CGFX_WINDOWS)

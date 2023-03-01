@@ -8,9 +8,8 @@
 
 namespace cgfx {
     SpriteRenderer::
-    SpriteRenderer(SDL_Renderer *renderer,
-                   std::shared_ptr<AssetStore<Texture2D>> textureStore) :
-            mRenderer(renderer), mTextureStore(std::move(textureStore)) {
+    SpriteRenderer(SDL_Renderer *renderer, const Camera2D& camera, std::shared_ptr<AssetStore<Texture2D>> textureStore) :
+            mRenderer(renderer), mCamera(camera), mTextureStore(std::move(textureStore)) {
         Require<SpriteComponent, TransformComponent>();
     }
 
@@ -27,8 +26,8 @@ namespace cgfx {
                     source_rect.h = sprite.source_rect.height;
 
                     SDL_Rect destination_rect;
-                    destination_rect.x = static_cast<int>(transform.position.x);
-                    destination_rect.y = static_cast<int>(transform.position.y);
+                    destination_rect.x = static_cast<int>(transform.position.x - mCamera.position_x);
+                    destination_rect.y = static_cast<int>(transform.position.y - mCamera.position_y);
                     destination_rect.w = sprite.source_rect.width * static_cast<int>(transform.scale.x);
                     destination_rect.h = sprite.source_rect.height * static_cast<int>(transform.scale.y);
 
@@ -40,8 +39,8 @@ namespace cgfx {
             if (HasComponent<BoxCollider>(entity) && HasComponent<DebugComponent>(entity)) {
                 auto& box = GetComponent<BoxCollider>(entity);
                 SDL_Rect debugRect;
-                debugRect.x = static_cast<int>(transform.position.x);
-                debugRect.y = static_cast<int>(transform.position.y);
+                debugRect.x = static_cast<int>(transform.position.x - mCamera.position_x);
+                debugRect.y = static_cast<int>(transform.position.y - mCamera.position_y);
                 debugRect.w = box.width;
                 debugRect.h = box.height;
                 SDL_RenderDrawRect(mRenderer, &debugRect);
