@@ -40,6 +40,15 @@ FetchContent_Declare(
         GIT_SHALLOW ON
 )
 
+FetchContent_Declare(
+        imgui
+        GIT_REPOSITORY "https://github.com/ocornut/imgui.git"
+        GIT_TAG "v1.89.3"
+        GIT_SHALLOW ON
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+)
+
 set(SDL2IMAGE_INSTALL OFF CACHE BOOL "" FORCE)
 set(SDL2TTF_INSTALL OFF CACHE BOOL "" FORCE)
 set(SDL2NET_INSTALL OFF CACHE BOOL "" FORCE)
@@ -49,7 +58,14 @@ set(SDL2TTF_SAMPLES OFF CACHE BOOL "" FORCE)
 set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
 set(SDL2TTF_VENDORED ON CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(sdl sdl_image glm GSL spdlog)
+FetchContent_MakeAvailable(sdl sdl_image glm GSL spdlog imgui)
+
+# Create imported target imgui::imgui-header-only
+add_library(imgui::imgui-header-only INTERFACE IMPORTED)
+
+set_target_properties(imgui::imgui-header-only PROPERTIES
+                      INTERFACE_INCLUDE_DIRECTORIES "${imgui_SOURCE_DIR}/"
+                      )
 
 # CGFX
 add_subdirectory(CGFX)

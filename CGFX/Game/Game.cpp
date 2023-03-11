@@ -21,6 +21,8 @@
 
 namespace cgfx {
 
+	const float Game::deltaTime = 0.01f;
+
 	Game::Game() :
 			mWindowWidth(0),
 			mWindowHeight(0),
@@ -108,7 +110,6 @@ namespace cgfx {
 	}
 
 	void Game::Update(float dt) {
-		mRegistry.GetSystem<PhysicsSystem>().Update(dt);
 		mRegistry.GetSystem<AnimationSystem>().Update(dt);
 		OnGameUpdate(dt);
 	}
@@ -133,8 +134,8 @@ namespace cgfx {
 
 	void Game::Run() {
 
-		auto get_high_res_time = []() {
-		  return static_cast<double>(SDL_GetTicks64());
+		auto hires_time_in_seconds = []() {
+		  return (static_cast<double>(SDL_GetTicks64()) / 1000.0f);
 		};
 
 		mIsRunning = true;
@@ -142,27 +143,28 @@ namespace cgfx {
 		OnGameStart();
 		UpdateRegistry();
 
-		double previous = get_high_res_time();
-		double lag = 0.0;
+		double t = 0.0;
+		const double dt = Game::deltaTime;
 
-		while (mIsRunning) {
-			double current = get_high_res_time();
-			double elapsed = current - previous;
-			previous = current;
-			lag += elapsed;
+		double currentTime = hires_time_in_seconds();
+		double accumulator = 0.0;
+
+		while (mIsRunning)
+		{
+			double newTime = hires_time_in_seconds();
+			double frameTime = newTime - currentTime;
+			currentTime = newTime;
+
+			accumulator += frameTime;
 
 			ProcessInput();
-			UpdateRegistry();
+			Update(dt);
 
-			Update(static_cast<float>(elapsed));
-
-			auto updates = 1;
-			while (lag >= MS_PER_UPDATE) {
+			while ( accumulator >= dt )
+			{
 				UpdateFixed();
-				lag -= MS_PER_UPDATE;
-				if (updates++ >= MAX_FRAME_SKIP) {
-					break;
-				};
+				accumulator -= dt;
+				t += dt;
 			}
 
 			Render();

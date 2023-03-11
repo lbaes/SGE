@@ -44,7 +44,7 @@ void FrogTDGame::OnGameStart() {
 	registry.AddComponent<TransformComponent>(ladybug, 32 * 4, 32 * 4, 2, 2);
 	registry.AddComponent<RigidBodyComponent>(ladybug, 0, 0);
 	registry.AddComponent<BoxCollider>(ladybug, 32*2, 32*2);
-	registry.AddComponent<KeyboardControllable>(ladybug, vec2{0, 20}, vec2{20, 0}, vec2{0, 20}, vec2{20, 0});
+	registry.AddComponent<KeyboardControllable>(ladybug, vec2{0, 300}, vec2{300, 0}, vec2{0, 300}, vec2{300, 0});
     registry.AddComponent<CameraTracker>(ladybug);
 
 	for (int i = 0; i < 5; ++i) {
@@ -52,7 +52,7 @@ void FrogTDGame::OnGameStart() {
 		registry.AddComponent<SpriteComponent>(frog, "frog", Rect2D{0, 0, 32, 32}, 1);
 		registry.AddComponent<SpriteAnimationComponent>(frog, 0, 2, 0u, 4, true);
 		registry.AddComponent<TransformComponent>(frog, 32 * i * 3, 0 * 3, 4, 4, 0);
-		registry.AddComponent<RigidBodyComponent>(frog, 1, 1);
+		registry.AddComponent<RigidBodyComponent>(frog, 100, 100);
 		registry.AddComponent<BoxCollider>(frog, 32*4, 32*4);
 		frogs.push_back(frog);
 	}

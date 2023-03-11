@@ -13,7 +13,6 @@ namespace cgfx {
     public:
         PhysicsSystem();
         void UpdateFixed();
-        void Update(float deltaTime);
     private:
     };
 

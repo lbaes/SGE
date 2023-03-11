@@ -6,8 +6,11 @@
 namespace cgfx {
 
     struct RigidBodyComponent {
-        explicit RigidBodyComponent(float xv = 0, float yv = 0) : velocity(xv, yv) {}
+        explicit RigidBodyComponent(float xv = 0, float yv = 0, float xa = 0.0f, float ya = 0.0f) :
+			acceleration(xa, ya),
+			velocity(xv, yv) {}
 
+		glm::vec2 acceleration;
         glm::vec2 velocity;
     };
 

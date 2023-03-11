@@ -1,4 +1,5 @@
 #include "CGFX/Systems/PhysicsSystem.hpp"
+#include "CGFX/Game/Game.hpp"
 
 namespace cgfx {
 
@@ -9,15 +10,9 @@ namespace cgfx {
     void PhysicsSystem::UpdateFixed() {
         ForEach<TransformComponent, RigidBodyComponent>(
                 [](auto& transform, auto& rigid) {
-					if (rigid.velocity.x >= 3){
-
-					}
-                    transform.position += rigid.velocity;
-                });
-    }
-
-    void PhysicsSystem::Update(float deltaTime) {
-
+					rigid.velocity 	+= rigid.acceleration * Game::deltaTime;
+				    transform.position += rigid.velocity  * Game::deltaTime;
+				});
     }
 
 } // cgfx

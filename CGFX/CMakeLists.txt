@@ -65,4 +65,4 @@ target_compile_options(CGFX PUBLIC $<$<CXX_COMPILER_ID:MSVC>: /EHsc>)
 target_compile_options(CGFX PRIVATE $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>: -Wall> $<$<CXX_COMPILER_ID:MSVC>: /EHsc /W4>)
 
 target_include_directories(CGFX INTERFACE SDL2::SDL2 SDL2_image::SDL2_image glm::glm)
-target_link_libraries(CGFX PUBLIC SDL2::SDL2 SDL2_image::SDL2_image glm::glm Microsoft.GSL::GSL spdlog::spdlog)
+target_link_libraries(CGFX PUBLIC SDL2::SDL2 SDL2_image::SDL2_image glm::glm Microsoft.GSL::GSL spdlog::spdlog imgui::imgui-header-only)
