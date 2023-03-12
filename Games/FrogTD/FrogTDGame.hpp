@@ -13,6 +13,7 @@ using namespace cgfx;
 
 class FrogTDGame final : public Game {
 public:
+	FrogTDGame() : Game(1920, 1080) {}
 	void OnGameStart() override;
 	void OnGameUpdate(float dt) override;
 	void OnGameFixedUpdate() override;

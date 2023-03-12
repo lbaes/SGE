@@ -23,15 +23,18 @@ namespace cgfx {
 
 	const float Game::deltaTime = 0.01f;
 
-	Game::Game() :
-			mWindowWidth(0),
-			mWindowHeight(0),
+	Game::Game() : Game(800, 600) {
+
+	}
+
+	Game::Game(int windowWidth, int windowHeight) :
+			mWindowWidth(windowWidth),
+			mWindowHeight(windowHeight),
 			mIsRunning(false),
 			mWindow(nullptr),
 			mRenderer(nullptr),
 			mTextureStore(std::make_shared<AssetStore<Texture2D>>()),
 			mEventBus(std::make_shared<EventBus>()), camera() {
-
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 			return;
@@ -40,8 +43,8 @@ namespace cgfx {
 		mWindow = SDL_CreateWindow("CGFX",
 								   SDL_WINDOWPOS_CENTERED,
 								   SDL_WINDOWPOS_CENTERED,
-								   800,
-								   600, SDL_WINDOW_SHOWN);
+								   mWindowWidth,
+								   mWindowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 
 		if (mWindow == nullptr) {
 			return;
@@ -52,7 +55,7 @@ namespace cgfx {
 			return;
 		}
 
-		SDL_GetRendererOutputSize(mRenderer, &mWindowWidth, &mWindowHeight);
+		SDL_GetRendererOutputSize(mRenderer, &mRenderWidth, &mRenderHeight);
 		SDL_RenderSetLogicalSize(mRenderer, mWindowWidth, mWindowHeight);
 
 		logger.Info("Renderer Width and Height: {},{}", mWindowWidth, mWindowHeight);
@@ -63,9 +66,24 @@ namespace cgfx {
 
 		constexpr std::array<uint8_t, 4> bg = {120, 70, 200, 255};
 		SDL_SetRenderDrawColor(mRenderer, bg[0], bg[1], bg[2], bg[3]);
+
+
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui::StyleColorsDark();
+		io = &ImGui::GetIO();
+
+
+
+		ImGui_ImplSDL2_InitForSDLRenderer(mWindow, mRenderer);
+		ImGui_ImplSDLRenderer_Init(mRenderer);
 	}
 
 	Game::~Game() {
+		ImGui_ImplSDLRenderer_Shutdown();
+		ImGui_ImplSDL2_Shutdown();
+		ImGui::DestroyContext();
+
 		SDL_DestroyRenderer(mRenderer);
 		SDL_DestroyWindow(mWindow);
 		SDL_Quit();
@@ -85,6 +103,7 @@ namespace cgfx {
 	void Game::ProcessInput() {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
+			ImGui_ImplSDL2_ProcessEvent(&event);
 			switch (event.type) {
 				case SDL_QUIT:
 					mIsRunning = false;
@@ -123,8 +142,12 @@ namespace cgfx {
 	}
 
 	void Game::Render() {
+		// Rendering
+		ImGui::Render();
+		SDL_RenderSetScale(mRenderer, io->DisplayFramebufferScale.x, io->DisplayFramebufferScale.y);
 		SDL_RenderClear(mRenderer);
 		mRegistry.GetSystem<SpriteRenderer>().Update();
+		ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 		SDL_RenderPresent(mRenderer);
 	}
 
@@ -149,23 +172,31 @@ namespace cgfx {
 		double currentTime = hires_time_in_seconds();
 		double accumulator = 0.0;
 
-		while (mIsRunning)
-		{
+		bool show_demo_window = true;
+		while (mIsRunning) {
 			double newTime = hires_time_in_seconds();
 			double frameTime = newTime - currentTime;
 			currentTime = newTime;
-
 			accumulator += frameTime;
 
 			ProcessInput();
+
+			// Start the Dear ImGui frame
+			ImGui_ImplSDLRenderer_NewFrame();
+			ImGui_ImplSDL2_NewFrame();
+			ImGui::NewFrame();
+
 			Update(dt);
 
-			while ( accumulator >= dt )
-			{
+			while (accumulator >= dt) {
 				UpdateFixed();
 				accumulator -= dt;
 				t += dt;
 			}
+
+			// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+			if (show_demo_window)
+				ImGui::ShowDemoWindow(&show_demo_window);
 
 			Render();
 		}
@@ -735,7 +766,6 @@ namespace cgfx {
 	}
 
 #if defined(CGFX_APPLE)
-
 	std::string Game::GetResource(const std::string& file, const std::string& type) {
 		auto cfFile =
 				CFStringCreateWithCString(nullptr, file.c_str(),
@@ -758,9 +788,10 @@ namespace cgfx {
 		return resourcePath;
 	};
 #elif defined(CGFX_WINDOWS)
+
 	std::string Game::GetResource(const std::string& file, const std::string& type) {
 		return "./assets/" + file + "." + type;
-	};
+	}
 #endif
 
 } // cgfx

@@ -8,6 +8,9 @@
 #include "CGFX/ECS/ECS.hpp"
 #include "CGFX/Assets/AssetStore.hpp"
 #include "CGFX/Assets/Texture2D.hpp"
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_sdlrenderer.h"
 
 const int FPS = 60;
 const int MS_PER_UPDATE = 16;
@@ -17,6 +20,7 @@ namespace cgfx {
     class Game {
     public:
         Game();
+		Game(int windowWidth, int windowHeight);
         virtual ~Game();
         DELETE_COPY_AND_ASSIGN(Game);
         DEFAULT_MOVE_AND_ASSIGN(Game);
@@ -68,6 +72,8 @@ namespace cgfx {
         void Render();
         int mWindowWidth;
         int mWindowHeight;
+		int mRenderWidth;
+		int mRenderHeight;
         bool mIsRunning;
         SDL_Window *mWindow;
         SDL_Renderer *mRenderer;
@@ -76,6 +82,7 @@ namespace cgfx {
 		std::shared_ptr<EventBus> mEventBus;
         Logger logger{"ENGINE"};
 		Camera2D camera{};
+		ImGuiIO* io = nullptr;
 
 		void DispatchEvents(SDL_KeyCode sdlKey, KeyState state);
     };

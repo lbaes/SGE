@@ -60,12 +60,27 @@ set(SDL2TTF_VENDORED ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(sdl sdl_image glm GSL spdlog imgui)
 
-# Create imported target imgui::imgui-header-only
-add_library(imgui::imgui-header-only INTERFACE IMPORTED)
+# Create target imgui
+add_library(imgui STATIC
+            ${imgui_SOURCE_DIR}/imconfig.h
+            ${imgui_SOURCE_DIR}/imgui.h
+            ${imgui_SOURCE_DIR}/imgui.cpp
+            ${imgui_SOURCE_DIR}/imgui_demo.cpp
+            ${imgui_SOURCE_DIR}/imgui_draw.cpp
+            ${imgui_SOURCE_DIR}/imgui_internal.h
+            ${imgui_SOURCE_DIR}/imgui_tables.cpp
+            ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+            ${imgui_SOURCE_DIR}/imstb_rectpack.h
+            ${imgui_SOURCE_DIR}/imstb_textedit.h
+            ${imgui_SOURCE_DIR}/imstb_truetype.h
+            ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
+            ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
+            ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.h
+            ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.cpp)
 
-set_target_properties(imgui::imgui-header-only PROPERTIES
-                      INTERFACE_INCLUDE_DIRECTORIES "${imgui_SOURCE_DIR}/"
-                      )
+target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR}/)
+
+target_link_libraries(imgui SDL2::SDL2)
 
 # CGFX
 add_subdirectory(CGFX)
