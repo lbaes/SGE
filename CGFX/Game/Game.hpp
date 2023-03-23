@@ -12,10 +12,6 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_sdlrenderer.h"
 
-const int FPS = 60;
-const int MS_PER_UPDATE = 16;
-const int MAX_FRAME_SKIP = 10;
-
 namespace cgfx {
     class Game {
     public:
@@ -27,8 +23,6 @@ namespace cgfx {
         void Run();
 
         virtual void OnGameStart() {};
-
-        virtual void OnGameUpdate([[maybe_unused]]float dt) {};
 
         virtual void OnGameFixedUpdate() {};
 
@@ -61,13 +55,10 @@ namespace cgfx {
 	protected:
 		static std::string GetResource(const std::string& filename, const std::string& type);
 
-		Logger gameLogger{"GAME"};
-
     private:
         void Setup();
         void ProcessInput();
-        void Update(float dt);
-        void UpdateFixed();
+        void FixedUpdate();
         void UpdateRegistry();
         void Render();
         int mWindowWidth;
@@ -83,6 +74,7 @@ namespace cgfx {
         Logger logger{"ENGINE"};
 		Camera2D camera{};
 		ImGuiIO* io = nullptr;
+		bool show_demo_window = true;
 
 		void DispatchEvents(SDL_KeyCode sdlKey, KeyState state);
     };

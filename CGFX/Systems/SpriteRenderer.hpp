@@ -20,7 +20,7 @@ namespace cgfx {
         std::shared_ptr<AssetStore<Texture2D>> mTextureStore;
 	};
 
-    ENABLE_TYPENAME(SpriteRenderer);
+    ENABLE_TYPENAME(SpriteRenderer)
 } // cgfx
 
 #endif //CGFX_SPRITERENDERER_HPP

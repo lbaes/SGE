@@ -16,7 +16,7 @@ namespace cgfx {
     private:
     };
 
-    ENABLE_TYPENAME(PhysicsSystem);
+    ENABLE_TYPENAME(PhysicsSystem)
 } // cgfx
 
 #endif //CGFX_PHYSICSSYSTEM_HPP

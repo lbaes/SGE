@@ -11,7 +11,7 @@ namespace cgfx {
 		bool isActive = false;
 	};
 
-	ENABLE_TYPENAME(CameraTracker);
+	ENABLE_TYPENAME(CameraTracker)
 
 } // cgfx
 

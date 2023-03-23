@@ -14,7 +14,7 @@ namespace cgfx {
         glm::vec2 velocity;
     };
 
-    ENABLE_TYPENAME(RigidBodyComponent);
+    ENABLE_TYPENAME(RigidBodyComponent)
 
 } // cgfx
 

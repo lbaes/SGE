@@ -20,7 +20,7 @@ namespace cgfx {
         float rotation;
     };
 
-    ENABLE_TYPENAME(TransformComponent);
+    ENABLE_TYPENAME(TransformComponent)
 
 } // cgfx
 

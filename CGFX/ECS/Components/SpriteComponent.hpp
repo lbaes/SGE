@@ -26,9 +26,8 @@ namespace cgfx {
 		int updates = 0;
 	};
 
-    ENABLE_TYPENAME(SpriteComponent);
-
-    ENABLE_TYPENAME(SpriteAnimationComponent);
+    ENABLE_TYPENAME(SpriteComponent)
+    ENABLE_TYPENAME(SpriteAnimationComponent)
 
 } // cgfx
 

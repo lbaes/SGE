@@ -2,6 +2,7 @@
 #include "CameraSystem.hpp"
 #include "CGFX/ECS/Components/CameraTracker.hpp"
 #include "CGFX/ECS/Components/TransformComponent.hpp"
+#include "CGFX/Game/Game.hpp"
 
 namespace cgfx {
 	CameraSystem::CameraSystem(Camera2D& camera, Rect2D map) : camera(camera), mMap(map) {
@@ -10,13 +11,13 @@ namespace cgfx {
 
 	void CameraSystem::UpdateFixed() {
 		ForEach<TransformComponent>([&](const auto& transform) {
-		  if (transform.position.x + (camera.width / 2) < mMap.width) {
-			  int new_pos = transform.position.x - (mMap.position_x / 2);
+		  if (transform.position.x + ((double)camera.width / 2.0f) < mMap.width) {
+			  int new_pos = (transform.position.x - ((double)mMap.position_x / 2.0f));
 			  camera.position_x = new_pos < 0 ? 0 : new_pos;
 		  }
 
-		  if (transform.position.y + (camera.height / 2) < mMap.height) {
-			  int new_pos = transform.position.y - (mMap.position_y / 2);
+		  if (transform.position.y + ((double)camera.height / 2.0f) < mMap.height) {
+			  int new_pos = (transform.position.y - ((double)mMap.position_y / 2.0f));
 			  camera.position_y = new_pos < 0 ? 0 : new_pos;
 		  }
 

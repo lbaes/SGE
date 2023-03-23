@@ -11,7 +11,7 @@ namespace cgfx {
 
     inline static StringId operator "" _id(const char *name, size_t) {
         return MakeStringId(name);
-    };
+    }
 
 }
 

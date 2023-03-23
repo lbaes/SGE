@@ -29,7 +29,7 @@ namespace cgfx {
 
     template<class T>
     requires valid_enum_flag<T> inline T& operator^=(T& a, T b) { return (T&) ((int&) a ^= (int) b); }
-};
+}
 
 
 #endif //CGFX_ENUMFLAG_HPP

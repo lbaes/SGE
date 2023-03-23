@@ -39,7 +39,7 @@ namespace cgfx {
         uint32_t offset_y;
     };
 
-    ENABLE_TYPENAME(BoxCollider);
+    ENABLE_TYPENAME(BoxCollider)
 
 } // cgfx
 

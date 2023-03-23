@@ -67,13 +67,10 @@ namespace cgfx {
 		constexpr std::array<uint8_t, 4> bg = {120, 70, 200, 255};
 		SDL_SetRenderDrawColor(mRenderer, bg[0], bg[1], bg[2], bg[3]);
 
-
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
 		io = &ImGui::GetIO();
-
-
 
 		ImGui_ImplSDL2_InitForSDLRenderer(mWindow, mRenderer);
 		ImGui_ImplSDLRenderer_Init(mRenderer);
@@ -128,21 +125,24 @@ namespace cgfx {
 		}
 	}
 
-	void Game::Update(float dt) {
-		mRegistry.GetSystem<AnimationSystem>().Update(dt);
-		OnGameUpdate(dt);
-	}
-
-	void Game::UpdateFixed() {
+	void Game::FixedUpdate() {
 		mRegistry.GetSystem<PhysicsSystem>().UpdateFixed();
 		mRegistry.GetSystem<CameraSystem>().UpdateFixed();
 		mRegistry.GetSystem<AnimationSystem>().UpdateFixed();
 		mRegistry.GetSystem<CollisionSystem>().UpdateFixed();
+		mRegistry.Update();
 		OnGameFixedUpdate();
 	}
 
 	void Game::Render() {
 		// Rendering
+		// Start the Dear ImGui frame
+		ImGui_ImplSDLRenderer_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		if (show_demo_window)
+			ImGui::ShowDemoWindow(&show_demo_window);
 		ImGui::Render();
 		SDL_RenderSetScale(mRenderer, io->DisplayFramebufferScale.x, io->DisplayFramebufferScale.y);
 		SDL_RenderClear(mRenderer);
@@ -172,7 +172,6 @@ namespace cgfx {
 		double currentTime = hires_time_in_seconds();
 		double accumulator = 0.0;
 
-		bool show_demo_window = true;
 		while (mIsRunning) {
 			double newTime = hires_time_in_seconds();
 			double frameTime = newTime - currentTime;
@@ -181,22 +180,11 @@ namespace cgfx {
 
 			ProcessInput();
 
-			// Start the Dear ImGui frame
-			ImGui_ImplSDLRenderer_NewFrame();
-			ImGui_ImplSDL2_NewFrame();
-			ImGui::NewFrame();
-
-			Update(dt);
-
 			while (accumulator >= dt) {
-				UpdateFixed();
+				FixedUpdate();
 				accumulator -= dt;
 				t += dt;
 			}
-
-			// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-			if (show_demo_window)
-				ImGui::ShowDemoWindow(&show_demo_window);
 
 			Render();
 		}
