@@ -1,8 +1,7 @@
 #ifndef CGFX_LOGGER_HPP
 #define CGFX_LOGGER_HPP
 
-#include <string>
-#include <iostream>
+#include "CGFX/Core/Core.hpp"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"

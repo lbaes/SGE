@@ -8,12 +8,10 @@
 #endif
 
 #include "Game.hpp"
-#include "CGFX/Core/Keys.hpp"
 #include "CGFX/Systems/PhysicsSystem.hpp"
 #include "CGFX/Systems/SpriteRenderer.hpp"
 #include "CGFX/Systems/AnimationSystem.hpp"
 #include "CGFX/Systems/CollisionSystem.hpp"
-#include "CGFX/Event/Events/CollisionEvent.hpp"
 #include "CGFX/Event/Events/InputEvents.hpp"
 #include "CGFX/Systems/InputLoggerSystem.hpp"
 #include "CGFX/Systems/KeyboardControlSystem.hpp"
@@ -50,7 +48,7 @@ namespace cgfx {
 			return;
 		}
 
-		mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC);
+		mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
 		if (!mRenderer) {
 			return;
 		}

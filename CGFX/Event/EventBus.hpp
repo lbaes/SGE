@@ -1,12 +1,7 @@
 #ifndef CGFX_EVENTBUS_HPP
 #define CGFX_EVENTBUS_HPP
 
-#include <unordered_map>
-#include <any>
-#include <typeindex>
-#include <functional>
-#include <vector>
-#include <memory>
+#include "CGFX/Core/Core.hpp"
 #include "CGFX/Core/Macros.hpp"
 
 namespace cgfx {

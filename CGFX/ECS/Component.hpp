@@ -1,24 +1,22 @@
 #ifndef CGFX_COMPONENT_HPP
 #define CGFX_COMPONENT_HPP
 
-#include <cstdint>
-#include <vector>
-#include <cassert>
+#include "CGFX/Core/Core.hpp"
 #include "CGFX/Core/Macros.hpp"
 
 namespace cgfx {
 
-    const uint32_t MAX_COMPONENTS_PER_ENTITY = 32;
+    const u32 MAX_COMPONENTS_PER_ENTITY = 32;
     using Signature = std::bitset<MAX_COMPONENTS_PER_ENTITY>;
 
     class IComponent {
     public:
         IComponent() = delete;
     protected:
-        static uint32_t mId; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+        static u32 mId; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     };
 
-    inline uint32_t IComponent::mId = 0; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    inline u32 IComponent::mId = 0; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
     template<typename>
     class Component : public IComponent {

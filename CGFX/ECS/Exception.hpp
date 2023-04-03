@@ -1,9 +1,7 @@
 #ifndef CGFX_EXCEPTION_HPP
 #define CGFX_EXCEPTION_HPP
 
-#include <stdexcept>
-#include <sstream>
-#include <string>
+#include "CGFX/Core/Core.hpp"
 
 namespace cgfx {
 

@@ -1,8 +1,7 @@
 #ifndef CGFX_SYSTEM_HPP
 #define CGFX_SYSTEM_HPP
 
-#include <utility>
-#include <set>
+#include "CGFX/Core/Core.hpp"
 #include "CGFX/Event/EventBus.hpp"
 #include "CGFX/ECS/Registry.hpp"
 #include "CGFX/Core/AlgorithmExtension.hpp"

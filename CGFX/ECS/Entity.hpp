@@ -1,8 +1,7 @@
 #ifndef CGFX_ENTITY_HPP
 #define CGFX_ENTITY_HPP
 
-#include <cstdint>
-#include <bitset>
+#include "CGFX/Core/Core.hpp"
 
 namespace cgfx {
 

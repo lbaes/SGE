@@ -1,18 +1,8 @@
 #ifndef CGFX_REGISTRY_HPP
 #define CGFX_REGISTRY_HPP
 
-#include <cstdint>
-#include <vector>
-#include <set>
-#include <queue>
-#include <bitset>
-#include <unordered_map>
-#include <typeindex>
-#include <numeric>
-#include <cassert>
-#include <string>
-#include <any>
-#include "gsl/pointers"
+#include "CGFX/Core/Core.hpp"
+
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "Exception.hpp"
