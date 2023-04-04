@@ -10,14 +10,14 @@ namespace cgfx {
         TransformComponent() : position(0, 0), scale(1, 1), rotation(0.0f) {
         }
 
-        TransformComponent(int x, int y, int scale_w = 1, int scale_h = 1, float rotation = 0.0f)
+        TransformComponent(int x, int y, int scale_w = 1, int scale_h = 1, f32 rotation = 0.0f)
             : position(x, y), scale(scale_w, scale_h), rotation(rotation) {
 
         }
 
         glm::vec2 position;
         glm::vec2 scale;
-        float rotation;
+        f32 rotation;
     };
 
     ENABLE_TYPENAME(TransformComponent)

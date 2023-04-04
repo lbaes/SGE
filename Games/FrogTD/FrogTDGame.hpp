@@ -23,8 +23,8 @@ public:
 private:
 	Entity ladybug{};
 	std::vector<Entity> frogs;
-	uint32_t mapHeight = 0;
-	uint32_t mapWidth = 0;
+	u32 mapHeight = 0;
+	u32 mapWidth = 0;
 	Logger gameLogger{"GAME"};
 };
 
@@ -61,7 +61,7 @@ void FrogTDGame::OnGameStart() {
 		frogs.push_back(frog);
 	}
 
-	GetBus().Subscribe<KeyEvent>([&](KeyEvent& event) {
+	GetBus().Subscribe<KeyEvent>([this, &registry](KeyEvent& event) {
 	  if (event.state == KeyState::PRESSED) {
 		  if (event.key == Key::P) {
 			  for (auto& frog: frogs) {
@@ -84,12 +84,18 @@ void FrogTDGame::OnGameStart() {
 				  registry.AddComponent<CameraTracker>(ladybug);
 				  registry.AddComponent<KeyboardControllable>(ladybug, vec2{0, 300}, vec2{300, 0}, vec2{0, 300},
 															  vec2{300, 0});
+				  auto& rb = registry.GetComponent<RigidBodyComponent>(ladybug);
+				  rb.velocity = {0,0};
+				  rb.acceleration = {0,0};
 			  } else {
 				  registry.RemoveComponent<CameraTracker>(ladybug);
 				  registry.RemoveComponent<KeyboardControllable>(ladybug);
 				  registry.AddComponent<CameraTracker>(frog);
 				  registry.AddComponent<KeyboardControllable>(frog, vec2{0, 300}, vec2{300, 0}, vec2{0, 300},
 															  vec2{300, 0});
+				  auto& rb = registry.GetComponent<RigidBodyComponent>(ladybug);
+				  rb.velocity = {0,0};
+				  rb.acceleration = {0,0};
 			  }
 		  }
 	  }
@@ -98,9 +104,9 @@ void FrogTDGame::OnGameStart() {
 
 void FrogTDGame::OnGameFixedUpdate() {
 
-	auto bounce_on_edges = [&](RigidBodyComponent& rb, TransformComponent& tr) {
-	  auto offset_bounce_x = static_cast<float>(mapWidth) - 32 * tr.scale.x;
-	  auto offset_bounce_y = static_cast<float>(mapHeight) - 32 * tr.scale.y;
+	auto bounce_on_edges = [this](RigidBodyComponent& rb, TransformComponent& tr) {
+	  auto offset_bounce_x = static_cast<f32>(mapWidth) - 32 * tr.scale.x;
+	  auto offset_bounce_y = static_cast<f32>(mapHeight) - 32 * tr.scale.y;
 
 	  if (tr.position.x > offset_bounce_x) {
 		  tr.position.x -= tr.position.x - offset_bounce_x;

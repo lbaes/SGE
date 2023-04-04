@@ -19,7 +19,7 @@ namespace cgfx {
 
 	struct MouseEvent : EventBase {
 		MouseButton mouseButton = MouseButton::NONE;
-		float x{}, y{};
+		f32 x{}, y{};
 	};
 
 

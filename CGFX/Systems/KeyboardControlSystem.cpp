@@ -16,7 +16,7 @@ namespace cgfx {
 	}
 
 	void KeyboardControlSystem::OnKeyPress(KeyEvent& keyEvent) {
-		ForEach<KeyboardControllable, RigidBodyComponent>([&](Entity e, auto& k, auto& r) {
+		ForEach<KeyboardControllable, RigidBodyComponent>([&](auto& k, auto& r) {
 		  if (keyEvent.state == KeyState::PRESSED) {
 			  switch (keyEvent.key) {
 				  case Key::W:

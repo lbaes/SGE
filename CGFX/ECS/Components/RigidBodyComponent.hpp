@@ -6,7 +6,7 @@
 namespace cgfx {
 
     struct RigidBodyComponent {
-        explicit RigidBodyComponent(float xv = 0, float yv = 0, float xa = 0.0f, float ya = 0.0f) :
+        explicit RigidBodyComponent(f32 xv = 0, f32 yv = 0, f32 xa = 0.0f, f32 ya = 0.0f) :
 			acceleration(xa, ya),
 			velocity(xv, yv) {}
 

@@ -50,7 +50,7 @@ namespace cgfx {
             return mRenderer;
         }
 
-		const static float deltaTime;
+		const static f32 deltaTime;
 
 	protected:
 		static std::string GetResource(const std::string& filename, const std::string& type);

@@ -1,12 +1,11 @@
 #ifndef CGFX_STRINGID_HPP
 #define CGFX_STRINGID_HPP
 
-#include <cstdint>
-#include <string>
+#include "CGFX/Core/Core.hpp"
 
 namespace cgfx {
 
-    using StringId = uint32_t;
+    using StringId = u32;
     StringId MakeStringId(const std::string&);
 
     inline static StringId operator "" _id(const char *name, size_t) {

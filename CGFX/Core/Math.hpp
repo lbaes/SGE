@@ -1,34 +1,28 @@
 #ifndef CGFX_MATH_HPP
 #define CGFX_MATH_HPP
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
-#include "glm/vec4.hpp"
+#include "Core.hpp"
 
 namespace cgfx {
-
-    using vec2 = glm::vec2;
-    using vec3 = glm::vec3;
-    using vec4 = glm::vec4;
 
     struct Point2D {
 
         Point2D() = default;
 
-        Point2D(uint32_t x, uint32_t y) : x(x), y(y) {
+        Point2D(u32 x, u32 y) : x(x), y(y) {
 
         }
 
-        uint32_t x;
-        uint32_t y;
+        u32 x;
+        u32 y;
     };
 
     struct Rect2D {
-        constexpr explicit Rect2D(uint32_t x = 0, uint32_t y = 0, uint32_t w = 0, uint32_t h = 0) :
+        constexpr explicit Rect2D(u32 x = 0, u32 y = 0, u32 w = 0, u32 h = 0) :
                 position_x(x), position_y(y), width(w), height(h) {
         }
 
-        constexpr uint32_t GetArea() const {
+        constexpr u32 GetArea() const {
             return width * height;
         }
 
@@ -43,10 +37,10 @@ namespace cgfx {
             return !(rhs == *this);
         }
 
-        uint32_t position_x;
-        uint32_t position_y;
-        uint32_t width;
-        uint32_t height;
+		u32 position_x;
+		u32 position_y;
+		u32 width;
+		u32 height;
     };
 }
 

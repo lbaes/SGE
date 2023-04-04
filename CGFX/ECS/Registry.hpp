@@ -130,7 +130,7 @@ namespace cgfx {
         std::deque<Entity> mAvailableEntities;
         std::set<Entity> mDeletionQueue;
         std::set<Entity> mUpdateQueue;
-        std::uint32_t mAliveEntities;
+        u32 mAliveEntities;
     };
 
 } // cgfx

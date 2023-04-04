@@ -25,11 +25,11 @@ namespace cgfx {
         DELETE_COPY_AND_ASSIGN(Texture2D);
         DELETE_MOVE_AND_ASSIGN(Texture2D);
 
-        int GetWidth() const {
+        i32 GetWidth() const {
             return mWidth;
         }
 
-        int GetHeight() const {
+		i32 GetHeight() const {
             return mHeight;
         }
 
@@ -39,8 +39,8 @@ namespace cgfx {
 
     private:
         SDL_Texture *mTexture = nullptr;
-        int mWidth = 0;
-        int mHeight = 0;
+		i32 mWidth = 0;
+		i32 mHeight = 0;
     };
 
 } // cgfx

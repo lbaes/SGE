@@ -5,8 +5,8 @@
 
 namespace cgfx {
 
-    const uint32_t MAX_ENTITIES = 80000;
-    using Entity = uint32_t;
+    const u32 MAX_ENTITIES = 80000;
+    using Entity = u32;
 
 } // cgfx
 

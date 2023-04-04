@@ -19,7 +19,7 @@
 
 namespace cgfx {
 
-	const float Game::deltaTime = 0.01f;
+	const f32 Game::deltaTime = 0.01f;
 
 	Game::Game() : Game(800, 600) {
 

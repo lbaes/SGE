@@ -26,10 +26,10 @@ namespace cgfx {
                     source_rect.h = sprite.source_rect.height;
 
                     SDL_Rect destination_rect;
-                    destination_rect.x = static_cast<int>(transform.position.x - mCamera.position_x);
-                    destination_rect.y = static_cast<int>(transform.position.y - mCamera.position_y);
-                    destination_rect.w = sprite.source_rect.width * static_cast<int>(transform.scale.x);
-                    destination_rect.h = sprite.source_rect.height * static_cast<int>(transform.scale.y);
+                    destination_rect.x = static_cast<i32>(transform.position.x - mCamera.position_x);
+                    destination_rect.y = static_cast<i32>(transform.position.y - mCamera.position_y);
+                    destination_rect.w = sprite.source_rect.width * static_cast<i32>(transform.scale.x);
+                    destination_rect.h = sprite.source_rect.height * static_cast<i32>(transform.scale.y);
 
                     SDL_RenderCopyEx(mRenderer, sdlTexture, &source_rect, &destination_rect,
                                      transform.rotation, NULL, SDL_FLIP_NONE);
@@ -39,8 +39,8 @@ namespace cgfx {
             if (HasComponent<BoxCollider>(entity) && HasComponent<DebugComponent>(entity)) {
                 auto& box = GetComponent<BoxCollider>(entity);
                 SDL_Rect debugRect;
-                debugRect.x = static_cast<int>(transform.position.x - mCamera.position_x);
-                debugRect.y = static_cast<int>(transform.position.y - mCamera.position_y);
+                debugRect.x = static_cast<i32>(transform.position.x - mCamera.position_x);
+                debugRect.y = static_cast<i32>(transform.position.y - mCamera.position_y);
                 debugRect.w = box.width;
                 debugRect.h = box.height;
                 SDL_RenderDrawRect(mRenderer, &debugRect);

@@ -21,7 +21,7 @@ namespace cgfx {
     template<typename>
     class Component : public IComponent {
     public:
-        static uint32_t GetId() {
+        static u32 GetId() {
             static auto id = mId++;
             return id;
         }
@@ -57,12 +57,12 @@ namespace cgfx {
             return mPool.size();
         }
 
-        void Resize(int count) {
+        void Resize(i32 count) {
             mPool.resize(count);
         }
 
         template<typename ...Args>
-        void Resize(int count, Args&& ... args) {
+        void Resize(i32 count, Args&& ... args) {
             mPool.resize(count, std::forward<Args>(args)...);
         }
 

@@ -11,13 +11,13 @@ namespace cgfx {
 
         }
 
-        BoxCollider(uint32_t width, uint32_t height) :
+        BoxCollider(u32 width, u32 height) :
                 BoxCollider(width, height, 0, 0) {
 
         }
 
-        BoxCollider(uint32_t width, uint32_t height,
-                    uint32_t offset_x, uint32_t offset_y) :
+        BoxCollider(u32 width, u32 height,
+                    u32 offset_x, u32 offset_y) :
                 width(width), height(height), offset_x(offset_x), offset_y(offset_y) {
 
         }
@@ -33,10 +33,10 @@ namespace cgfx {
             return !(rhs == *this);
         }
 
-        uint32_t width;
-        uint32_t height;
-        uint32_t offset_x;
-        uint32_t offset_y;
+        u32 width;
+        u32 height;
+        u32 offset_x;
+        u32 offset_y;
     };
 
     ENABLE_TYPENAME(BoxCollider)

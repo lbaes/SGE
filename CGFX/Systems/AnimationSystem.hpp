@@ -10,7 +10,6 @@ namespace cgfx {
     public:
         AnimationSystem();
         void UpdateFixed();
-        void Update(float deltaTime);
     };
 
 } // cgfx
