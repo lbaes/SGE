@@ -27,10 +27,10 @@ namespace cgfx {
     }
 
     bool CollisionSystem::AABB(const detail::BoxColliderTransform& a, const detail::BoxColliderTransform& b) {
-        return (a.transform.position.x < b.transform.position.x + b.box.width &&
-                a.transform.position.x + a.box.width > b.transform.position.x &&
-                a.transform.position.y < b.transform.position.y + b.box.height &&
-                a.transform.position.y + a.box.height > b.transform.position.y);
+        return (a.transform.position.x + a.box.offset_x < b.transform.position.x + b.box.offset_x + b.box.width &&
+                a.transform.position.x + a.box.offset_x + a.box.width > b.transform.position.x + b.box.offset_x &&
+                a.transform.position.y + a.box.offset_y < b.transform.position.y + b.box.offset_y + b.box.height &&
+                a.transform.position.y + a.box.offset_y + a.box.height > b.transform.position.y + b.box.offset_y);
     }
 
 } // cgfx

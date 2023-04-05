@@ -15,7 +15,7 @@ namespace cgfx {
 
     void SpriteRenderer::Update() {
         ForEach<SpriteComponent, TransformComponent>
-                ([=](auto& sprite, const auto& transform) {
+                ([this](auto& sprite, const auto& transform) {
 
                     const auto sdlTexture = mTextureStore->Get(sprite.texture_id)->GetSDLTexture();
 
@@ -35,12 +35,12 @@ namespace cgfx {
                                      transform.rotation, NULL, SDL_FLIP_NONE);
                 });
 
-        ForEach<TransformComponent>([=](auto entity, const auto& transform) {
+        ForEach<TransformComponent>([this](auto entity, const auto& transform) {
             if (HasComponent<BoxCollider>(entity) && HasComponent<DebugComponent>(entity)) {
                 auto& box = GetComponent<BoxCollider>(entity);
                 SDL_Rect debugRect;
-                debugRect.x = static_cast<i32>(transform.position.x - mCamera.position_x);
-                debugRect.y = static_cast<i32>(transform.position.y - mCamera.position_y);
+                debugRect.x = static_cast<i32>(transform.position.x - mCamera.position_x) + box.offset_x;
+                debugRect.y = static_cast<i32>(transform.position.y - mCamera.position_y) + box.offset_y;
                 debugRect.w = box.width;
                 debugRect.h = box.height;
                 SDL_RenderDrawRect(mRenderer, &debugRect);

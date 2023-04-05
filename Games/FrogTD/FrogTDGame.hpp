@@ -8,6 +8,7 @@
 #include "CGFX/ECS/Components/DebugComponent.hpp"
 #include "CGFX/ECS/Components/CameraTracker.hpp"
 #include "CGFX/Systems/CameraSystem.hpp"
+#include "CGFX/Event/Events/CollisionEvent.hpp"
 
 using namespace cgfx;
 
@@ -36,6 +37,7 @@ void FrogTDGame::OnGameStart() {
 	// Load Sprites
 	texStore.Load("ladybug"_id, GetRenderer(), GetResource("ladybug", "png"));
 	texStore.Load("frog"_id, GetRenderer(), GetResource("frog", "png"));
+	texStore.Load("tree1"_id, GetRenderer(), GetResource("Tree1", "png"));
 
 	// Load TileMap
 	LoadTileMapIntoRegistry(GetResource("wasteland_tilemap", "layout"), "wasteland_tilemap", 32, 3, 4);
@@ -59,6 +61,16 @@ void FrogTDGame::OnGameStart() {
 		registry.AddComponent<RigidBodyComponent>(frog, 100, 100);
 		registry.AddComponent<BoxCollider>(frog, 32 * 4, 32 * 4);
 		frogs.push_back(frog);
+	}
+
+	std::array<Entity, 18> trees{};
+	for (int i = 0; i < 18; i++) {
+		auto tree = registry.CreateEntity();
+		registry.AddComponent<SpriteComponent>(tree, "tree1", Rect2D{0, 0, 64, 64});
+		registry.AddComponent<TransformComponent>(tree, 64 * i * 4, 256, 4, 4, 0);
+		registry.AddComponent<BoxCollider>(tree, 60, 40, 32*3, 64 * 4 -40);
+		registry.AddComponent<DebugComponent>(tree);
+		trees[i] = tree;
 	}
 
 	GetBus().Subscribe<KeyEvent>([this, &registry](KeyEvent& event) {
@@ -85,8 +97,8 @@ void FrogTDGame::OnGameStart() {
 				  registry.AddComponent<KeyboardControllable>(ladybug, vec2{0, 300}, vec2{300, 0}, vec2{0, 300},
 															  vec2{300, 0});
 				  auto& rb = registry.GetComponent<RigidBodyComponent>(ladybug);
-				  rb.velocity = {0,0};
-				  rb.acceleration = {0,0};
+				  rb.velocity = {0, 0};
+				  rb.acceleration = {0, 0};
 			  } else {
 				  registry.RemoveComponent<CameraTracker>(ladybug);
 				  registry.RemoveComponent<KeyboardControllable>(ladybug);
@@ -94,11 +106,30 @@ void FrogTDGame::OnGameStart() {
 				  registry.AddComponent<KeyboardControllable>(frog, vec2{0, 300}, vec2{300, 0}, vec2{0, 300},
 															  vec2{300, 0});
 				  auto& rb = registry.GetComponent<RigidBodyComponent>(ladybug);
-				  rb.velocity = {0,0};
-				  rb.acceleration = {0,0};
+				  rb.velocity = {0, 0};
+				  rb.acceleration = {0, 0};
 			  }
 		  }
 	  }
+	});
+
+	GetBus().Subscribe<CollisionEvent>([this, &registry](CollisionEvent& event) {
+
+	  if (event.a == ladybug or event.b == ladybug) {
+		  registry.DeleteEntity(ladybug);
+		  return;
+	  }
+
+	  if (registry.HasComponent<RigidBodyComponent>(event.a)) {
+		  auto& rba = registry.GetComponent<RigidBodyComponent>(event.a);
+		  rba.velocity *= -1.0f;
+	  }
+
+	  if (registry.HasComponent<RigidBodyComponent>(event.b)) {
+		  auto& rbb = registry.GetComponent<RigidBodyComponent>(event.b);
+		  rbb.velocity *= -1.0f;
+	  }
+
 	});
 }
 
@@ -134,6 +165,7 @@ void FrogTDGame::OnGameFixedUpdate() {
 		auto& transform = GetRegistry().GetComponent<TransformComponent>(frog);
 		bounce_on_edges(rigid, transform);
 	}
+
 }
 
 void FrogTDGame::LoadTileMapIntoRegistry

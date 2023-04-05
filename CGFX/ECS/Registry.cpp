@@ -31,6 +31,7 @@ namespace cgfx {
 
         if (entity <= MAX_ENTITIES && !cstd::contains(mAvailableEntities, entity)) {
             mDeletionQueue.emplace(entity);
+			return;
         }
         throw DeleteUncreatedEntityException();
     }

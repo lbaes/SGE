@@ -3,13 +3,13 @@
 
 namespace cgfx {
 
-    PhysicsSystem::PhysicsSystem() : System() {
+    PhysicsSystem::PhysicsSystem(std::shared_ptr<EventBus> eventBus) : mBus(std::move(eventBus)), System() {
         Require<TransformComponent, RigidBodyComponent>();
     }
 
     void PhysicsSystem::UpdateFixed() {
         ForEach<TransformComponent, RigidBodyComponent>(
-                [](auto& transform, auto& rigid) {
+                [](auto entity, auto& transform, auto& rigid) {
 					rigid.velocity 	+= rigid.acceleration * Game::deltaTime;
 				    transform.position += rigid.velocity  * Game::deltaTime;
 				});

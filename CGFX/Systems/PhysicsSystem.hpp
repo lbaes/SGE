@@ -11,9 +11,10 @@ namespace cgfx {
 
     class PhysicsSystem final : public System {
     public:
-        PhysicsSystem();
+        PhysicsSystem(std::shared_ptr<EventBus> eventBus);
         void UpdateFixed();
     private:
+		std::shared_ptr<EventBus> mBus;
     };
 
     ENABLE_TYPENAME(PhysicsSystem)

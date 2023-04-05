@@ -85,7 +85,7 @@ namespace cgfx {
 	}
 
 	void Game::Setup() {
-		mRegistry.RegisterSystem<PhysicsSystem>();
+		mRegistry.RegisterSystem<PhysicsSystem>(mEventBus);
 		mRegistry.RegisterSystem<AnimationSystem>();
 		mRegistry.RegisterSystem<CameraSystem>(camera, Rect2D(0, 0, mWindowWidth, mWindowHeight));
 		mRegistry.RegisterSystem<KeyboardControlSystem>(mEventBus);
