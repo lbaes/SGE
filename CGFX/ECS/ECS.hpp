@@ -2,7 +2,6 @@
 #define CGFX_ECS_HPP
 
 #include "CGFX/Core/Core.hpp"
-
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "System.hpp"

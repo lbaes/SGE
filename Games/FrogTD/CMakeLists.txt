@@ -1,14 +1,7 @@
-set(RESOURCE_FILES
-    GameAssets/frog.png
-    GameAssets/ladybug.png
-    GameAssets/wasteland_tilemap.layout
-    GameAssets/wasteland_tilemap.png)
-if(WIN32)
-    add_executable(FrogTD FrogTDGame.hpp Main.cpp "${RESOURCE_FILES}")
-else()
-    add_executable(FrogTD FrogTDGame.hpp Main.cpp "${RESOURCE_FILES}")
-endif()
+file(GLOB RESOURCE_FILES "./GameAssets/*")
+message("${RESOURCE_FILES}")
 
+add_executable(FrogTD Main.cpp "${RESOURCE_FILES}")
 set_target_properties(FrogTD PROPERTIES LINKER_LANGUAGE CXX)
 
 if (APPLE)

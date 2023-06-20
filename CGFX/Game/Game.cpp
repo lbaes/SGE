@@ -1,6 +1,3 @@
-#include <array>
-#include <fstream>
-
 #ifdef CGFX_APPLE
 
 #include <corefoundation/CFBundle.h>

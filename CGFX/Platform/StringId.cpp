@@ -1,4 +1,4 @@
-#include "detail/MurmurHash3.hpp"
+#include "CGFX/Core/detail/MurmurHash3.hpp"
 #include "StringId.hpp"
 
 cgfx::StringId cgfx::MakeStringId(const std::string& key) {

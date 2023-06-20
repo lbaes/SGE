@@ -9,9 +9,9 @@
 namespace cgfx {
 
     class Logger {
-    public:
+	public:
 
-        explicit Logger(const std::string& name) {
+		explicit Logger(const std::string& name) {
             try {
                 mConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 				mLogger = std::make_unique<spdlog::logger>(name, mConsoleSink);
@@ -62,6 +62,38 @@ namespace cgfx {
         }
     };
 
+#ifdef CGFX_DEBUG
+	inline static Logger* DebugLogger;
+
+	inline void InitDebugLogger() {
+		if (!DebugLogger){
+			DebugLogger = new Logger("ENGINE");
+		}
+	}
+
+	inline void ShutdownDebugLogger() {
+		if (DebugLogger){
+			delete DebugLogger;
+		}
+	}
+
+	template<typename... Ts>
+	void LogDebugInfo(const char* msg, Ts&& ... args){
+		if (DebugLogger)
+			DebugLogger->Info(msg, std::forward<Ts>(args)...);
+	}
+
+	template<typename... Ts>
+	void LogDebugError(const char* msg, Ts&& ... args){
+		if (DebugLogger)
+			DebugLogger->Error(msg, std::forward<Ts>(args)...);
+	}
+
+#define CGFX_DEBUG_LOG(...) cgfx::LogDebugInfo(__VA_ARGS__)
+
+#else
+#define CGFX_DEBUG_LOG(...)
+#endif
 } // cgfx
 
 #endif //CGFX_LOGGER_HPP

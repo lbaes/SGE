@@ -6,12 +6,12 @@
 
 #if CGFX_ASSERTIONS_ENABLED
 
-#define debugBreak() { std::raise(SIGTRAP) }
+#define debugBreak() { std::raise(SIGTRAP); }
 
 #define CGFX_ASSERT(expr) \
     if (expr) {}          \
     else {                \
-    logger->Critical("{}, file: {}, line: {}", #expr, __FILE__, __LINE__); \
+    CGFX_DEBUG_LOG("{}, file: {}, line: {}", #expr, __FILE__, __LINE__); \
     debugBreak();\
     }
 

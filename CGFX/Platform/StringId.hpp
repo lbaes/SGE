@@ -1,7 +1,7 @@
 #ifndef CGFX_STRINGID_HPP
 #define CGFX_STRINGID_HPP
 
-#include "CGFX/Core/Core.hpp"
+#include "Platform.hpp"
 
 namespace cgfx {
 

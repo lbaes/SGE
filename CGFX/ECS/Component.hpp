@@ -3,6 +3,7 @@
 
 #include "CGFX/Core/Core.hpp"
 #include "CGFX/Core/Macros.hpp"
+#include "CGFX/Core/Assertions.hpp"
 
 namespace cgfx {
 
@@ -13,10 +14,10 @@ namespace cgfx {
     public:
         IComponent() = delete;
     protected:
-        static u32 mId; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+        static u64 mId; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     };
 
-    inline u32 IComponent::mId = 0; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    inline u64 IComponent::mId = 0; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
     template<typename>
     class Component : public IComponent {
@@ -37,42 +38,43 @@ namespace cgfx {
         using iterator = typename std::vector<ComponentT>::iterator;
         using const_iterator = typename std::vector<ComponentT>::const_iterator;
 
-        void Add(const ComponentT& item) {
-            mPool.push_back(item);
-        }
+		Pool() = default;
+		Pool(u64 initial_capacity) {
+			mPool.reserve(initial_capacity);
+		}
 
-        void Add(ComponentT&& item) {
-            mPool.push_back(item);
-        }
-
-        void Set(size_t index, const ComponentT& item) {
+        void Set(u64 index, const ComponentT& item) {
             mPool.at(index) = item;
         }
 
-        std::size_t GetCapacity() const noexcept {
+		u64 GetCapacity() const noexcept {
             return mPool.capacity();
         }
 
-        std::size_t GetSize() const noexcept {
+		u64 GetSize() const noexcept {
             return mPool.size();
         }
 
-        void Resize(i32 count) {
+		void Reserve(u64 count){
+			mPool.reserve(count);
+		}
+
+        void Resize(u64 count) {
             mPool.resize(count);
         }
 
         template<typename ...Args>
-        void Resize(i32 count, Args&& ... args) {
+        void Resize(u64 count, Args&& ... args) {
             mPool.resize(count, std::forward<Args>(args)...);
         }
 
-        ComponentT& operator[](size_t index) {
-            assert(index < mPool.size() && "index out of range");
+        ComponentT& operator[](u64 index) {
+            CGFX_ASSERT(index < mPool.size() && "index out of range");
             return mPool[index];
         }
 
-        const ComponentT& operator[](size_t index) const {
-            assert(index < mPool.size() && "index out of range");
+        const ComponentT& operator[](u64 index) const {
+			CGFX_ASSERT(index < mPool.size() && "index out of range");
             return mPool[index];
         }
 

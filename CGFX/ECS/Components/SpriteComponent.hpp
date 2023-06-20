@@ -2,7 +2,7 @@
 #define CGFX_SPRITECOMPONENT_HPP
 
 #include <string>
-#include "CGFX/Core/StringId.hpp"
+#include "CGFX/Platform/StringId.hpp"
 #include "CGFX/Core/Math.hpp"
 
 namespace cgfx {

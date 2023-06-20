@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
-#include "CGFX/Core/StringId.hpp"
+#include "CGFX/Platform/StringId.hpp"
 
 namespace cgfx {
 
